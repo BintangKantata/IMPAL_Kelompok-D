@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Daftar Film - Cinemate</title>
+  <link href="dist/output.css" rel="stylesheet">
+  <style>
+    body {
+      background: radial-gradient(ellipse at top left, #23343B 0%, #23343B 65%, #26434C 100%);
+      color: #fff;
+      font-family: 'Montserrat', Arial, sans-serif;
+      min-height: 100vh;
+    }
+    .header-nav {
+      position: sticky;
+      top: 0;
+      background: radial-gradient(ellipse at top left, #23343B 0%, #23343B 65%, #26434C 100%);
+      z-index: 10;
+    }
+    /* Carousel Styles */
+    .carousel-section {
+      width: 100vw;
+      position: relative;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
+      overflow: hidden;
+      margin-top: 0.5rem;
+      margin-bottom: 2.5rem;
+      background: rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 410px;
+      max-height: 56vw;
+    }
+    .carousel {
+      width: 100vw;
+      height: 410px;
+      max-height: 56vw;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .carousel-slide {
+      display: none;
+      width: 100vw;
+      height: 410px;
+      max-height: 56vw;
+      position: absolute;
+      left: 0;
+      top: 0;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.7s;
+      opacity: 0;
+    }
+    .carousel-slide.active {
+      display: flex;
+      opacity: 1;
+      transition: opacity 0.7s;
+    }
+    .carousel-img-bg {
+      width: 100vw;
+      height: 410px;
+      background-size: cover;
+      background-position: center;
+      filter: blur(0.5px) brightness(0.7);
+      position: absolute;
+      top: 0; left: 0;
+      z-index: 0;
+      transition: background-image 0.7s;
+    }
+    .carousel-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 2.2rem;
+      margin-left: 4vw;
+    }
+    .carousel-poster {
+      width: 220px;
+      height: 320px;
+      object-fit: cover;
+      border-radius: 1.5rem;
+      box-shadow: 0 8px 42px 0 rgba(35,101,223,0.21);
+    }
+    .carousel-text {
+      color: #fff;
+      max-width: 500px;
+      text-shadow: 0 2px 12px #23343Bcc;
+      font-size: 1.07rem;
+    }
+    .carousel-title {
+      font-size: 2.15rem;
+      font-weight: 900;
+      margin-bottom: 0.6rem;
+      margin-top: 0.5rem;
+      letter-spacing: 0.03em;
+      line-height: 1.1;
+    }
+    .carousel-meta {
+      font-size: 1.08rem;
+      color: #5AC3E7;
+      font-weight: 700;
+      margin-bottom: 0.7rem;
+      margin-top: 0.1rem;
+    }
+    .carousel-btn {
+      background: #5AC3E7;
+      color: #23343B;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 0.8rem;
+      padding: 0.7rem 1.7rem;
+      border: none;
+      margin-top: 1.2rem;
+      margin-bottom: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .carousel-btn:hover {
+      background: #2365df;
+      color: #fff;
+    }
+    /* Carousel dots */
+    .carousel-dots {
+      position: absolute;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 0.8rem;
+      z-index: 10;
+    }
+    .carousel-dot {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: #5AC3E7;
+      opacity: 0.5;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      border: 2px solid #2365df;
+    }
+    .carousel-dot.active {
+      opacity: 1;
+      background: #2365df;
+    }
+    @media(max-width:1200px){
+      .carousel-section, .carousel, .carousel-slide, .carousel-img-bg{height:32vw;max-height:32vw;}
+      .carousel-poster{height:210px; width:140px;}
+      .carousel-title{font-size:1.5rem;}
+      .carousel-content{gap:1.3rem;}
+    }
+    @media(max-width:900px){
+      .carousel-section, .carousel, .carousel-slide, .carousel-img-bg{height:38vw;max-height:38vw;}
+      .carousel-poster{height:140px; width:90px;}
+      .carousel-content{margin-left:2vw;}
+      .carousel-title{font-size:1.1rem;}
+      .carousel-meta{font-size:1rem;}
+    }
+    @media(max-width:600px){
+      .carousel-section, .carousel, .carousel-slide, .carousel-img-bg{height:54vw;max-height:54vw;}
+      .carousel-poster{height:90px; width:60px;}
+      .carousel-content{flex-direction:column;align-items:flex-start;gap:0.6rem;}
+      .carousel-title{font-size:0.9rem;}
+      .carousel-meta{font-size:0.9rem;}
+      .carousel-text{font-size:0.95rem;}
+    }
+    /* grid and filter style tetap seperti sebelumnya */
+    .movie-filters {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .filter-btn {
+      background: #2365df;
+      color: #fff;
+      font-weight: 600;
+      border-radius: 0.7rem;
+      font-size: 1rem;
+      padding: 0.55rem 1.7rem;
+      border: none;
+      cursor: pointer;
+      margin-right: 0.5rem;
+      transition: background 0.2s;
+    }
+    .filter-btn.active, .filter-btn:hover {
+      background: #5AC3E7;
+      color: #23343B;
+    }
+    .movie-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 2rem 1.3rem;
+      padding-bottom: 2rem;
+    }
+    .movie-card {
+      background: rgba(255,255,255,0.13);
+      border-radius: 1.1rem;
+      overflow: hidden;
+      box-shadow: 0 2px 12px 0 rgba(0,0,0,0.11);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.13s;
+      cursor: pointer;
+      position: relative;
+      min-width: 170px;
+    }
+    .movie-card:hover {
+      transform: translateY(-8px) scale(1.04);
+      box-shadow: 0 8px 28px 0 rgba(35,101,223,0.21);
+    }
+    .movie-poster {
+      width: 100%;
+      max-width: 160px;
+      height: 230px;
+      object-fit: cover;
+      border-radius: 1rem 1rem 0 0;
+      background: #1e2b32;
+      margin-bottom: 0.6rem;
+    }
+    .movie-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.18rem;
+      text-align: center;
+      line-height: 1.1;
+      min-height: 2.2em;
+    }
+    .movie-meta {
+      font-size: 0.94rem;
+      color: #5AC3E7;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 0.3rem;
+      line-height: 1.1;
+    }
+    .search-bar {
+      padding: 0.5rem 1.3rem;
+      border-radius: 999px;
+      border: none;
+      font-size: 1rem;
+      color: #23343B;
+      background: #fff;
+      width: 210px;
+    }
+  </style>
+  <script>
+    const carouselMovies = [
+      {
+        title: "THE CONJURING: LAST RITES",
+        meta: "Horror/Thriller · 2h 15m",
+        desc: "Penyelidik paranormal Ed dan Lorraine Warren menghadapi satu kasus terakhir yang mengerikan, melibatkan entitas misterius yang harus mereka hadapi.",
+        bg: "https://wallpapercave.com/wp/wp15744319.jpg",
+        poster: "https://media.themoviedb.org/t/p/w300_and_h450_bestv2/7JzOmJ1fIU43I3gLHYsY8UzNzjG.jpg"
+      },
+      {
+        title: "TRON: ARES",
+        meta: "Sci-Fi/Action · 1h 59m",
+        desc: "Sebuah program canggih bernama Ares dikirim dari dunia digital ke dunia nyata dalam sebuah misi berbahaya, menandai pertemuan pertama umat manusia dengan makhluk kecerdasan buatan (A.I.).",
+        bg: "https://wallpapercave.com/wp/wp15265122.jpg",
+        poster: "https://media.themoviedb.org/t/p/w300_and_h450_bestv2/chpWmskl3aKm1aTZqUHRCtviwPy.jpg"
+
+      },
+      {
+        title: "JEMBATAN SHIRATAL MUSTAQIM",
+        meta: "Horror · 1h 36m",
+        desc: "Setelah bencana tsunami dan munculnya rumor tentang penggelapan dana bantuan, Arya sering diteror oleh penglihatan tentang sebuah tempat yang diyakini sebagai Jembatan Shiratal Mustaqim — jembatan akhirat yang menghubungkan ke surga dan membentang di atas neraka.",
+        bg: "https://cdn.medcom.id/dynamic/content/2025/10/08/1782683/1T6BIxASwu.jpg?w=1024",
+        poster: "https://media.themoviedb.org/t/p/w300_and_h450_bestv2/pvmnrIov0uKlPmcrABOaCa7ucud.jpg"
+
+      },
+      {
+        title: "Wed or Wait",
+        meta: "Comedy/Drama/Romance · 1h 48m",
+        desc: "Niken menghadapi tekanan dari keluarganya untuk menikah meskipun ia sendiri tidak menginginkannya. Dengan mantan tunangan dan pacarnya saat ini sama-sama mendesaknya untuk menikah, Niken bergulat dengan pertanyaan penting: menikah atau tidak menikah? Dan yang lebih penting lagi, dengan siapa?",
+        bg: "https://wallpapers.com/images/hd/sonic-3-movie-cover-7y6h7v1f7b7h7v1f.jpg",
+        poster: "https://media.themoviedb.org/t/p/w300_and_h450_bestv2/jSOwR3phJ0L9USxziFfNxReiZ5R.jpg"
+      },
+      {
+        title: "WICKED",
+        meta: "Fantasy · 2h 40m",
+        desc: "Enter the magical world of Wicked. A fantasy musical that unveils the untold story of the witches of Oz.",
+        bg: "https://images.hdqwalls.com/wallpapers/wicked-movie-2024-4k-dr.jpg",
+        poster: "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/3Q3kLh3C6h3t3q6g3qG2q3h3g3h.jpg"
+      }
+    ];
+    let carouselIndex = 0;
+    let carouselTimer;
+    function showCarousel(idx) {
+      const slides = document.querySelectorAll('.carousel-slide');
+      const dots = document.querySelectorAll('.carousel-dot');
+      slides.forEach((slide,i)=>{
+        slide.classList.remove('active');
+        dots[i].classList.remove('active');
+        if(i===idx) {
+          slide.classList.add('active');
+          dots[i].classList.add('active');
+        }
+      });
+      carouselIndex = idx;
+    }
+    function nextCarousel() {
+      carouselIndex = (carouselIndex + 1) % carouselMovies.length;
+      showCarousel(carouselIndex);
+    }
+    function startCarousel() {
+      carouselTimer = setInterval(nextCarousel, 3400);
+    }
+    function stopCarousel() {
+      clearInterval(carouselTimer);
+    }
+    window.onload = function(){
+      // render carousel
+      const carousel = document.getElementById('carousel');
+      carouselMovies.forEach((movie,i)=>{
+        const slide = document.createElement('div');
+        slide.className = 'carousel-slide';
+        if(i===0) slide.classList.add('active');
+        slide.innerHTML = `
+          <div class="carousel-img-bg" style="background-image:url('${movie.bg}');"></div>
+          <div class="carousel-content">
+            <img src="${movie.poster}" class="carousel-poster" alt="${movie.title} Poster"/>
+            <div class="carousel-text">
+              <div class="carousel-title">${movie.title}</div>
+              <div class="carousel-meta">${movie.meta}</div>
+              <div>${movie.desc}</div>
+              <a href="filmdetail.html" class="carousel-btn">Show Detail</a>
+            </div>
+          </div>
+        `;
+        carousel.appendChild(slide);
+      });
+      // dots
+      const dots = document.getElementById('carousel-dots');
+      carouselMovies.forEach((_,i)=>{
+        const dot = document.createElement('span');
+        dot.className = 'carousel-dot' + (i===0?' active':'');
+        dot.onclick = ()=>{
+          showCarousel(i);
+          stopCarousel();
+          startCarousel();
+        };
+        dots.appendChild(dot);
+      });
+      showCarousel(0);
+      startCarousel();
+    }
+  </script>
+</head>
+<body>
+  <header class="header-nav flex justify-between items-center px-10 py-5">
+    <div class="flex items-center space-x-3">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/video-projector.png" class="w-10 h-10" alt="Cinemate logo">
+      <span class="text-white text-2xl font-bold tracking-wide">CINEMATE</span>
+    </div>
+    <nav class="flex items-center space-x-7">
+      <a href="homepage.html" class="text-white text-lg hover:text-blue-400">Home</a>
+      <a href="booking.html" class="text-white text-lg hover:text-blue-400">Booking</a>
+      <a href="filmdetail.html" class="text-white text-lg hover:text-blue-400">Film Detail</a>
+      <a href="foodorder.html" class="text-white text-lg hover:text-blue-400">Food Order</a>
+      <a href="interest.html" class="text-white text-lg hover:text-blue-400">Interest</a>
+      <a href="orderhistory.html" class="text-white text-lg hover:text-blue-400">Order History</a>
+      <a href="login.html" class="text-white text-lg hover:text-blue-400">Login</a>
+      <a href="movies.html" class="text-white text-lg hover:text-blue-400 font-bold">Movies</a>
+      <input type="text" class="search-bar" placeholder="Search movies" />
+    </nav>
+  </header>
+  <main class="pt-8">
+    <!-- Carousel Poster Film Section -->
+    <div class="carousel-section">
+      <div class="carousel" id="carousel"></div>
+      <div class="carousel-dots" id="carousel-dots"></div>
+    </div>
+    <!-- Filter -->
+    <div class="movie-filters">
+      <button class="filter-btn active">Now Showing</button>
+      <button class="filter-btn">Upcoming</button>
+      <select class="filter-btn" style="min-width:110px;">
+        <option>None</option>
+        <option>Action</option>
+        <option>Drama</option>
+        <option>Comedy</option>
+        <option>Animation</option>
+        <option>Horror</option>
+        <option>Romance</option>
+      </select>
+      <select class="filter-btn" style="min-width:110px;">
+        <option>None</option>
+        <option>&lt; 1h 30m</option>
+        <option>1h 30m - 2h</option>
+        <option>&gt; 2h</option>
+      </select>
+    </div>
+    <!-- Grid List Film -->
+    <div class="movie-grid">
+      <!-- Now Showing -->
+      <div class="movie-card">
+        <img src="https://www.themoviedb.org/t/p/w600_and_h900_bestv2/eH1zvGk8XTw3F4zD6a6kA7dM8Ip.jpg" class="movie-poster" alt="Mufasa Poster">
+        <div class="movie-title">MUFFASA</div>
+        <div class="movie-meta">Adventure · 1h 58m</div>
+      </div>
+      <div class="movie-card">
+        <img src="https://www.themoviedb.org/t/p/w600_and_h900_bestv2/xD9MyW9xwFRd7h5g8mUjJvN3bD9.jpg" class="movie-poster" alt="Miracle Cell Poster">
+        <div class="movie-title">Miracle In Cell</div>
+        <div class="movie-meta">Drama · 2h 27m</div>
+      </div>
+      <div class="movie-card">
+        <img src="https://www.themoviedb.org/t/p/w600_and_h900_bestv2/2qM3uE3RrFQElZf2wB6uS7t8kPp.jpg" class="movie-poster" alt="Spiderman Poster">
+        <div class="movie-title">SPIDER-MAN: ACROSS THE SPIDER-VERSE</div>
+        <div class="movie-meta">Action/Comedy · 2h 20m</div>
+      </div>
+      <div class="movie-card">
+        <img src="https://www.themoviedb.org/t/p/w600_and_h900_bestv2/5aOv9sE1vZ3qGhXEbQdHcA9Sb3n.jpg" class="movie-poster" alt="Moana 2 Poster">
+        <div class="movie-title">MOANA 2</div>
+        <div class="movie-meta">Animation · 1h 40m</div>
+      </div>
+      <div class="movie-card">
+        <img src="https://www.themoviedb.org/t/p/w600_and_h900_bestv2/bZlDgB1r8N6oQ6QYWqV2qJ0i4Zt.jpg" class="movie-poster" alt="Sonic 3 Poster">
+        <div class="movie-title">SONIC 3</div>
+        <div class="movie-meta">Comedy · 1h 50m</div>
+      </div>
+      <div class="movie-card">
+        <img src="https://www.themoviedb.org/t/p/w600_and_h900_bestv2/2qM3uE3RrFQElZf2wB6uS7t8kPp.jpg" class="movie-poster" alt="John Poster">
+        <div class="movie-title">JOHN</div>
+        <div class="movie-meta">Action/Thriller · 1h 37m</div>
+      </div>
+      <!-- Upcoming -->
+      <div class="movie-card">
+        <img src="https://www.themoviedb.org/t/p/w600_and_h900_bestv2/8rN95I2WiTqGk6h2c2qA9vE2nQd.jpg" class="movie-poster" alt="Werewolves Poster">
+        <div class="movie-title">WEREWOLVES</div>
+        <div class="movie-meta">Action/Thriller · 1h 33m</div>
+      </div>
+      <div class="movie-card">
+        <img src="https://www.themoviedb.org/t/p/w600_and_h900_bestv2/3Q3kLh3C6h3t3q6g3qG2q3h3g3h.jpg" class="movie-poster" alt="Wicked Poster">
+        <div class="movie-title">WICKED</div>
+        <div class="movie-meta">Fantasy · 2h 40m</div>
+      </div>
+      <div class="movie-card">
+        <img src="https://www.themoviedb.org/t/p/w600_and_h900_bestv2/3m2z1G3N9p8z2g6f7c6h8q9p2g3.jpg" class="movie-poster" alt="Modal Nekad Poster">
+        <div class="movie-title">MODAL NEKAD</div>
+        <div class="movie-meta">Comedy · 1h 47m</div>
+      </div>
+      <div class="movie-card">
+        <img src="https://www.themoviedb.org/t/p/w600_and_h900_bestv2/2qM3uE3RrFQElZf2wB6uS7t8kPp.jpg" class="movie-poster" alt="Surup Poster">
+        <div class="movie-title">SURUP</div>
+        <div class="movie-meta">Horror · 1h 47m</div>
+      </div>
+      <!-- Add more movie cards as needed -->
+    </div>
+  </main>
+</body>
+</html>

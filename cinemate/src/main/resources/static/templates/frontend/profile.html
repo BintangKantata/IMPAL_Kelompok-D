@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profil Pengguna - Cinemate</title>
+  <link href="dist/output.css" rel="stylesheet">
+  <style>
+    body { background: radial-gradient(ellipse at top left, #23343B 0%, #23343B 60%, #26434C 100%); color: #fff; font-family: 'Montserrat', Arial, sans-serif; min-height: 100vh;}
+    .profile-card { background: rgba(255,255,255,0.10); border-radius: 1.5rem; padding: 2.5rem; max-width: 420px; margin: auto;}
+    .profile-title { font-size:2rem; font-weight:900; margin-bottom:1rem;}
+    .profile-card label { font-weight: bold; display: block; margin-bottom:0.2rem;}
+    .profile-card input { width: 100%; padding: 0.6rem; border-radius: 0.5rem; margin-bottom: 1rem; border: none;}
+    .btn { background: #2365df; color: #fff; border-radius: 0.5rem; padding: 0.7rem 0; font-weight: bold; width: 100%; margin-top: 1rem;}
+    .btn:hover { background: #1747a7;}
+  </style>
+</head>
+<body>
+  <header class="flex justify-between items-center px-10 py-5">
+    <div class="flex items-center space-x-3">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/video-projector.png" class="w-10 h-10"/>
+      <span class="text-white text-2xl font-bold tracking-wide">CINEMATE</span>
+    </div>
+    <nav><a href="homepage.html" class="text-black text-lg hover:text-blue-400">Home</a></nav>
+  </header>
+  <main class="flex justify-center items-center py-10 px-4">
+    <div class="profile-card">
+      <h1 class="profile-title text-white mb-3">Profil Pengguna</h1>
+      <form>
+        <label for="nama">Nama</label>
+        <input type="text" id="nama" value="Nama User"/>
+        <label for="email">Email</label>
+        <input type="email" id="email" value="user@email.com"/>
+        <label for="phone">Nomor Telepon</label>
+        <input type="tel" id="phone" value="08123456789"/>
+        <button type="submit" class="btn">Update Profil</button>
+      </form>
+    </div>
+  </main>
+</body>
+</html>

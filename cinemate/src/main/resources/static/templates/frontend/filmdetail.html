@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Detail Film - Cinemate</title>
+  <link href="dist/output.css" rel="stylesheet">
+  <style>
+    body { background: radial-gradient(ellipse at top left, #23343B 0%, #23343B 60%, #26434C 100%); color: #fff; font-family: 'Montserrat', Arial, sans-serif; min-height: 100vh;}
+    .detail-card { background: rgba(255,255,255,0.10); border-radius: 1.5rem; padding: 2rem; max-width: 600px; margin: auto;}
+    .detail-title { font-size:2rem; font-weight:900; margin-bottom:1rem;}
+    .detail-table td {padding:0.5rem 1rem;}
+    .btn-order { background: #2365df; color: #fff; border-radius: 0.5rem; padding: 0.7rem 2rem; font-weight: bold; margin-top: 2rem;}
+    .btn-order:hover { background: #1747a7;}
+  </style>
+</head>
+<body>
+  <header class="flex justify-between items-center px-10 py-5">
+    <div class="flex items-center space-x-3">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/video-projector.png" class="w-10 h-10"/>
+      <span class="text-white text-2xl font-bold tracking-wide">CINEMATE</span>
+    </div>
+    <nav><a href="homepage.html" class="text-white text-lg hover:text-blue-400">Home</a></nav>
+  </header>
+  <main class="flex justify-center items-center py-10 px-4">
+    <div class="detail-card">
+      <h1 class="detail-title text-white">Judul Film</h1>
+      <table class="detail-table">
+        <tr><td>Genre</td><td>Action, Drama</td></tr>
+        <tr><td>Durasi</td><td>120 menit</td></tr>
+        <tr><td>Rating</td><td>PG-13</td></tr>
+        <tr><td>Sinopsis</td><td>Lorem ipsum dolor sit amet, film tentang petualangan luar biasa di dunia bioskop.</td></tr>
+      </table>
+      <button class="btn-order" onclick="location.href='booking.html'">Pesan Tiket</button>
+    </div>
+  </main>
+</body>
+</html>
