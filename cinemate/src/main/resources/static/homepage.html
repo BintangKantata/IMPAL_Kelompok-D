@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CINEMATE - Homepage</title>
+  <link href="dist/output.css" rel="stylesheet">
+  <style>
+    body {
+      background: radial-gradient(circle at top left, #0e1a20 0%, #11252d 40%, #0d1418 100%);
+      color: white;
+      font-family: 'Montserrat', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: rgba(12, 24, 28, 0.7);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    .hero-section {
+      padding: 80px 10%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 50px;
+    }
+
+    .hero-section h1 {
+      font-size: 4rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      color: white;
+    }
+
+    .hero-section p {
+      font-size: 1.1rem;
+      color: #b7dce7;
+      max-width: 600px;
+      line-height: 1.6;
+    }
+
+    .hero-section .flex.flex-wrap {
+      display: flex !important;
+      justify-content: center !important;
+      gap: 1rem !important; /* 3rem = setara gap-12 di Tailwind */
+      flex-wrap: wrap !important;
+    }
+
+
+    .category-icon {
+      background: linear-gradient(145deg, #15272f, #1e3640);
+      border-radius: 16px;
+      padding: 15px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+      transition: transform 0.2s;
+      cursor: pointer;
+    }
+
+    .category-icon:hover {
+      transform: translateY(-5px);
+    }
+
+    /* Section News */
+    .news-section {
+      background: linear-gradient(to bottom, #0b1418, #142a34 90%);
+      padding: 80px 10%;
+    }
+
+    .news-card {
+      background: #1a2f38;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .news-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 10px 35px rgba(0,0,0,0.6);
+    }
+
+    footer {
+      background: linear-gradient(to top, #0a1115 95%, transparent);
+      padding: 50px 10%;
+      color: #aaa;
+    }
+
+    .footer-title {
+      color: white;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Pop-up Selamat Datang */
+    #welcomeModal {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5); /* lapisan gelap */
+    backdrop-filter: blur(8px); /* efek blur */
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    }
+
+    /* Saat aktif */
+    #welcomeModal.active {
+    opacity: 1;
+    pointer-events: auto;
+    }
+
+    /* Kotak pop-up */
+    #welcomeBox {
+    background: rgba(30, 41, 59, 0.95);
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 24px;
+    width: 380px;
+    text-align: center;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.6);
+    transform: scale(0.9);
+    opacity: 0;
+    transition: all 0.5s ease;
+    }
+
+    /* Animasi muncul */
+    #welcomeBox.show {
+    transform: scale(1);
+    opacity: 1;
+    }
+
+    /* Tombol */
+    #closeModalBtn {
+    background: #2196F3;
+    color: white;
+    border: none;
+    font-weight: 600;
+    border-radius: 6px;
+    padding: 8px 18px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    }
+
+    #closeModalBtn:hover {
+    background: #1976D2;
+    }
+
+    /* === Dropdown Menu === */
+    #dropdownMenu {
+    position: absolute;
+    right: 1rem; /* agar tidak mojok kanan */
+    top: 60px; /* jarak dari tombol profile */
+    width: 180px;
+    background: rgba(20, 35, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    transition: all 0.25s ease;
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+    }
+
+    /* Saat dropdown aktif (JS menambahkan class "show") */
+    #dropdownMenu.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    }
+
+    /* Saat dropdown disembunyikan */
+    #dropdownMenu.hidden {
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+    }
+
+    /* Isi dropdown */
+    #dropdownMenu a,
+    #dropdownMenu button {
+    color: #e6edf2;
+    background: transparent;
+    width: 100%;
+    text-align: left;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s, color 0.2s;
+    }
+
+    /* Ukuran ikon di dalam dropdown */
+    #dropdownMenu svg,
+    #dropdownMenu img {
+    width: 18px;
+    height: 18px;
+    }
+
+    /* Hover effect */
+    #dropdownMenu a:hover,
+    #dropdownMenu button:hover {
+    background: rgba(0, 200, 255, 0.15);
+    color: #5AC3E7;
+    }
+
+    /* Header user (foto + nama) */
+    .user-header {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* jarak antara gambar dan teks */
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .user-header img {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    }
+
+    .user-header span {
+    color: #e6edf2;
+    font-weight: 600;
+    font-size: 0.95rem;
+    }
+
+  </style>
+</head>
+
+<!-- Pop-up Selamat Datang (Gaya Alert) -->
+<div id="welcomeModal"
+     class="hidden fixed top-8 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-500 ease-out">
+
+  <div id="welcomeBox"
+       class="bg-[#1e293b]/90 backdrop-blur-md text-white rounded-xl shadow-2xl w-[380px] p-5 text-center border border-gray-700
+            transform -translate-y-5 opacity-0 transition-all duration-500 ease-out">
+
+    <h2 class="text-xl font-bold mb-1">Selamat Datang!</h2>
+    <p id="welcomeMessage" class="text-gray-200 text-sm mb-4 leading-relaxed"></p>
+
+    <button id="closeModalBtn"
+            class="bg-[#2196F3] hover:bg-[#1976D2] text-white text-sm font-semibold px-4 py-1.5 rounded-md transition-all duration-200">
+      OK
+    </button>
+  </div>
+</div>
+
+
+<body>
+<!-- Header -->
+<header class="flex justify-between items-center px-10 py-5">
+  <div class="flex items-center space-x-3">
+    <img src="https://img.icons8.com/ios-filled/50/ffffff/video-projector.png" class="w-10 h-10" alt="Cinemate logo">
+    <span class="text-white text-2xl font-bold tracking-wide">CINEMATE</span>
+  </div>
+
+
+  <!-- PROFILE DROPDOWN -->
+  <div class="relative inline-block text-left">
+    <!-- Tombol Profil -->
+    <button id="profileButton" class="focus:outline-none">
+      <img id="profileAvatar"
+           src="https://img.icons8.com/ios-filled/50/ffffff/user-male-circle.png"
+           alt="Profile"
+           class="w-10 h-10 rounded-full hover:opacity-80 transition" />
+    </button>
+
+    <!-- Dropdown Menu -->
+    <div id="dropdownMenu" class="hidden">
+      <div class="user-header">
+        <img src="https://img.icons8.com/ios-filled/50/ffffff/user-male-circle.png" alt="Profile" />
+        <span id="dropdownName">pisang</span>
+      </div>
+
+      <a href="profile.html">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-6 8a6 6 0 1112 0H4z"/>
+        </svg>
+        My cinemate
+      </a>
+
+      <button id="logoutButton">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h6a1 1 0 010 2H5v10h5a1 1 0 110 2H4a1 1 0 01-1-1V4zm10.293 4.707a1 1 0 010-1.414L16.586 4H9a1 1 0 110-2h8a1 1 0 011 1v8a1 1 0 11-2 0V5.414l-3.293 3.293a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+        </svg>
+        Log out
+      </button>
+    </div>
+
+  </div>
+</header>
+
+<!-- Hero Section -->
+<section class="hero-section bg-[#021D2C] text-white py-24 px-8 flex flex-col items-center text-center">
+  <img src="https://img.icons8.com/ios-filled/100/ffffff/video-projector.png"
+       class="w-24 mb-6" alt="logo">
+
+  <h1 class="text-6xl font-extrabold tracking-wide mb-4">CINEMATE</h1>
+
+  <p class="max-w-2xl text-lg leading-relaxed text-gray-300 mb-12">
+    Selamat datang di <span class="text-[#5AC3E7] font-bold">CINEMATE!</span>
+    Temukan jadwal film terbaru, pilih kursi favoritmu, dan pesan tiket dengan mudah.
+    Masuk sekarang dan mulai petualangan menontonmu.
+  </p>
+
+  <div class="flex flex-wrap justify-center gap-20 mt-10">
+    <div class="flex flex-col items-center">
+      <div class="category-icon bg-[#0A2C3E] p-6 rounded-2xl shadow-md hover:bg-[#0E3A52] transition-all">
+        <img src="https://img.icons8.com/fluency/48/film-reel.png" alt="Bioskop">
+      </div>
+      <span class="text-white text-sm font-semibold mt-3">Bioskop</span>
+    </div>
+
+    <a href="movies.html" class="flex flex-col items-center cursor-pointer">
+      <div class="flex flex-col items-center">
+        <div class="category-icon bg-[#0A2C3E] p-6 rounded-2xl shadow-md hover:bg-[#0E3A52] transition-all">
+          <img src="https://img.icons8.com/fluency/48/movie-projector.png" alt="Film">
+        </div>
+        <span class="text-white text-sm font-semibold mt-3">Film</span>
+      </div>
+    </a>
+
+    <a href="foodorder.html" class="flex flex-col items-center cursor-pointer">
+      <div class="flex flex-col items-center">
+        <div class="category-icon bg-[#0A2C3E] p-6 rounded-2xl shadow-md hover:bg-[#0E3A52] transition-all">
+          <img src="https://img.icons8.com/color/48/popcorn.png" alt="Food">
+        </div>
+        <span class="text-white text-sm font-semibold mt-3">C.Food</span>
+      </div>
+    </a>
+
+    <div class="flex flex-col items-center">
+      <div class="category-icon bg-[#0A2C3E] p-6 rounded-2xl shadow-md hover:bg-[#0E3A52] transition-all">
+        <img src="https://img.icons8.com/color/48/room.png" alt="Tempat">
+      </div>
+      <span class="text-white text-sm font-semibold mt-3">Sewa Tempat</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- Berita & Promo CINEMATE -->
+<section class="news-section">
+  <h2 class="text-4xl font-bold mb-10 text-white text-center">
+    Berita & Promo <span class="text-[#5AC3E7]">CINEMATE</span>
+  </h2>
+
+  <div class="flex overflow-x-auto gap-8 px-4 scrollbar-hide justify-center">
+    <!-- Card 1 -->
+    <div class="news-card w-[380px]">
+      <img src="tiketdiskon.png" alt="Promo 1" class="w-full h-60 object-cover">
+    </div>
+
+    <!-- Card 2 -->
+    <div class="news-card w-[380px]">
+      <img src="popcorn.png" alt="Promo 2" class="w-full h-60 object-cover">
+    </div>
+
+    <!-- Card 3 -->
+    <div class="news-card w-[380px]">
+      <img src="night.png" alt="Promo 3" class="w-full h-60 object-cover">
+    </div>
+
+    <!-- Card 4 -->
+    <div class="news-card w-[380px]">
+      <img src="popcorn.png" alt="Promo 4" class="w-full h-60 object-cover">
+    </div>
+
+    <!-- Card 5 -->
+    <div class="news-card w-[380px]">
+      <img src="popcorn.png" alt="Promo 5" class="w-full h-60 object-cover">
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-10">
+    <div>
+      <h3 class="footer-title">CINEMATE</h3>
+      <p>Tempat terbaik untuk menemukan dan menikmati film favoritmu.</p>
+    </div>
+    <div>
+      <h3 class="footer-title">MOVIES</h3>
+      <p>F&B</p>
+      <p>CINEMA</p>
+    </div>
+    <div>
+      <h3 class="footer-title">CONTACT US</h3>
+      <p>PRIVACY POLICY</p>
+      <p>TERMS & CONDITIONS</p>
+    </div>
+    <div>
+      <h3 class="footer-title">CINEMATE SUPPORT</h3>
+      <p>E-MAIL: cinemate@gmail.com</p>
+    </div>
+  </div>
+  <p class="text-center text-xs mt-8 text-gray-500">
+    © 2025 <span class="text-white font-bold">CINEMATE</span> — All Rights Reserved
+  </p>
+</footer>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+  const userData = JSON.parse(localStorage.getItem("customer"));
+
+  // Jika user belum login, sembunyikan fitur profil, tapi jangan redirect
+  if (!userData) {
+    const dropdownName = document.getElementById("dropdownName");
+    const profileButton = document.getElementById("profileButton");
+    const dropdownMenu = document.getElementById("dropdownMenu");
+
+    // Sembunyikan tombol profil (atau ubah jadi tombol Login)
+    if (profileButton) {
+      profileButton.innerHTML = `<a href="login.html" class="text-white hover:text-blue-400">Login</a>`;
+    }
+
+    // Tidak perlu return — biarkan homepage tetap tampil
+    return;
+  }
+
+  // Jika user login, tampilkan nama mereka
+  let displayName = userData.firstName || userData.nama || "User";
+  document.getElementById("dropdownName").textContent = displayName;
+
+  const profileButton = document.getElementById("profileButton");
+  const dropdownMenu = document.getElementById("dropdownMenu");
+  const logoutButton = document.getElementById("logoutButton");
+
+  // Toggle dropdown saat tombol diklik
+  profileButton.addEventListener("click", (e) => {
+  e.stopPropagation();
+
+  if (dropdownMenu.classList.contains("hidden")) {
+    dropdownMenu.classList.remove("hidden");
+    setTimeout(() => dropdownMenu.classList.add("show"), 10);
+  } else {
+    dropdownMenu.classList.remove("show");
+    setTimeout(() => dropdownMenu.classList.add("hidden"), 200);
+  }
+});
+
+  // Tutup dropdown saat klik di luar area
+  window.addEventListener("click", (e) => {
+  if (!profileButton.contains(e.target)) {
+    dropdownMenu.classList.remove("show");
+    setTimeout(() => dropdownMenu.classList.add("hidden"), 200);
+  }
+});
+
+  // Logout
+  logoutButton.addEventListener("click", (e) => {
+  e.preventDefault();
+
+  // Hapus data user di localStorage / session
+  localStorage.removeItem("userData");
+  localStorage.removeItem("token");
+
+  // Tutup dropdown dengan animasi
+  dropdownMenu.classList.remove("show");
+  setTimeout(() => dropdownMenu.classList.add("hidden"), 200);
+
+  // Arahkan ke halaman login (ubah sesuai nama file kamu)
+  window.location.href = "login.html";
+});
+
+  // 🔹 Pop-up sambutan SELALU muncul setiap kali halaman dimuat
+  const modal = document.getElementById("welcomeModal");
+  const box = document.getElementById("welcomeBox");
+  const msg = document.getElementById("welcomeMessage");
+  const btn = document.getElementById("closeModalBtn");
+
+  if (modal && box && msg && btn) {
+  msg.textContent = `Halo, ${displayName}! Senang bertemu kembali di CINEMATE 🍿`;
+
+  // Tampilkan modal
+  modal.classList.add("active");
+  setTimeout(() => box.classList.add("show"), 100);
+
+  // Tutup manual (klik OK)
+  btn.addEventListener("click", closePopup);
+
+  // Tutup otomatis setelah 3 detik
+  setTimeout(closePopup, 3000);
+
+  function closePopup() {
+    box.classList.remove("show");
+    modal.classList.remove("active");
+  }
+}
+});
+</script>
+</body>
+</html>
