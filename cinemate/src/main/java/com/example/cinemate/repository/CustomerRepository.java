@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
     // Kamu bisa tambahkan query custom nanti di sini, misalnya:
     Customer findByEmail(String email);
+    boolean existsByEmail(String email);
 }
