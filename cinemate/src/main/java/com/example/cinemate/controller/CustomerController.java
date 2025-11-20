@@ -6,30 +6,45 @@ import com.example.cinemate.dto.CustomerLoginRequestDto;
 import com.example.cinemate.entities.Customer;
 import com.example.cinemate.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 @RestController
 @RequestMapping("/api/customer")
-@CrossOrigin(origins = {"http://localhost:5500", "http://127.0.0.1:5500"}) // agar dapat diakses dari frontend lokal
+@CrossOrigin(origins = "*")
 public class CustomerController {
 
     @Autowired
     private CustomerService customerService;
 
     @PostMapping("/register")
-    public CustomerDto register(@RequestBody CustomerRegisterRequestDto req) {
-        Customer savedCustomer = customerService.register(req);
+    public ResponseEntity<?> register(@RequestBody CustomerRegisterRequestDto req) {
+        try {
+            Customer savedCustomer = customerService.register(req);
 
-        // Konversi ke DTO sebelum return
-        CustomerDto dto = new CustomerDto();
-        dto.setId(savedCustomer.getId());
-        dto.setFirstName(savedCustomer.getFirstName());
-        dto.setLastName(savedCustomer.getLastName());
-        dto.setEmail(savedCustomer.getEmail());
-        dto.setPassword(savedCustomer.getPassword());
+            // Konversi ke DTO
+            CustomerDto dto = new CustomerDto();
+            dto.setId(savedCustomer.getId());
+            dto.setFirstName(savedCustomer.getFirstName());
+            dto.setLastName(savedCustomer.getLastName());
+            dto.setEmail(savedCustomer.getEmail());
+            dto.setPassword(savedCustomer.getPassword());
 
-        return dto;
+            return ResponseEntity.ok(dto); // sukses
+
+        } catch (RuntimeException e) {
+            // Mengembalikan error sebagai JSON
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", e.getMessage());
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(errorResponse); // error 400
+        }
     }
 
     @PostMapping("/login")
