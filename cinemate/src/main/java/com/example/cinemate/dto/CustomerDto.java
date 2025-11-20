@@ -1,13 +1,24 @@
 package com.example.cinemate.dto;
 
+import jakarta.persistence.*;
 import lombok.Data;
 
-@Data
+@Entity
+@Table(name = "customers", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "email")
+})
 public class CustomerDto {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String firstName;
     private String lastName;
+
+    @Column(nullable = false, unique = true)
     private String email;
+
     private String password;
 
     // Getter & Setter
