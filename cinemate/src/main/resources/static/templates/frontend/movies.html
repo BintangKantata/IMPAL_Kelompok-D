@@ -7,16 +7,30 @@
   <link href="dist/output.css" rel="stylesheet">
   <style>
     body {
-      background: radial-gradient(ellipse at top left, #23343B 0%, #23343B 65%, #26434C 100%);
+      background: radial-gradient(ellipse at top left, #0F1D22 0%, #0F1D22 60%, #152A30 100%);
       color: #fff;
       font-family: 'Montserrat', Arial, sans-serif;
       min-height: 100vh;
+      margin: 0;
     }
     .header-nav {
       position: sticky;
       top: 0;
-      background: radial-gradient(ellipse at top left, #23343B 0%, #23343B 65%, #26434C 100%);
+      background: radial-gradient(ellipse at top left, #0F1D22 0%, #0F1D22 60%, #152A30 100%);
+      padding: 1.4rem 2.5rem;
       z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header-nav a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: color 0.2s;
+    }
+    .header-nav a:hover {
+      color: #5AC3E7;
     }
     /* Carousel Styles */
     .carousel-section {
@@ -113,7 +127,7 @@
     }
     .carousel-btn {
       background: #5AC3E7;
-      color: #23343B;
+      color: #0F1D22;
       font-size: 1rem;
       font-weight: bold;
       border-radius: 0.8rem;
@@ -122,15 +136,14 @@
       margin-top: 1.2rem;
       margin-bottom: 0.9rem;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: background 0.2s, color 0.2s;
       text-decoration: none;
       display: inline-block;
     }
     .carousel-btn:hover {
-      background: #2365df;
+      background: #36A7CE;
       color: #fff;
     }
-    /* Carousel dots */
     .carousel-dots {
       position: absolute;
       bottom: 18px;
@@ -148,11 +161,11 @@
       opacity: 0.5;
       cursor: pointer;
       transition: opacity 0.2s;
-      border: 2px solid #2365df;
+      border: 2px solid #36A7CE;
     }
     .carousel-dot.active {
       opacity: 1;
-      background: #2365df;
+      background: #36A7CE;
     }
     @media(max-width:1200px){
       .carousel-section, .carousel, .carousel-slide, .carousel-img-bg{height:32vw;max-height:32vw;}
@@ -175,55 +188,57 @@
       .carousel-meta{font-size:0.9rem;}
       .carousel-text{font-size:0.95rem;}
     }
-    /* grid and filter style tetap seperti sebelumnya */
+
+    /* Filter Buttons */
     .movie-filters {
       display: flex;
       align-items: center;
       gap: 1rem;
-      margin-bottom: 2rem;
+      margin: 0 2.5rem 2rem;
     }
     .filter-btn {
-      background: #2365df;
-      color: #fff;
+      background: #5AC3E7;
+      color: #0F1D22;
       font-weight: 600;
       border-radius: 0.7rem;
       font-size: 1rem;
       padding: 0.55rem 1.7rem;
       border: none;
       cursor: pointer;
-      margin-right: 0.5rem;
-      transition: background 0.2s;
+      transition: background 0.2s, color 0.2s;
     }
-    .filter-btn.active, .filter-btn:hover {
-      background: #5AC3E7;
-      color: #23343B;
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: #36A7CE;
+      color: #fff;
     }
+
+    /* Movie Grid dan Card */
     .movie-grid {
       display: grid;
-      grid-template-columns: repeat(6, 1fr);
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
       gap: 2rem 1.3rem;
-      padding-bottom: 2rem;
+      padding: 0 2.5rem 2rem;
     }
     .movie-card {
-      background: rgba(255,255,255,0.13);
+      background: rgba(255,255,255,0.09);
+      backdrop-filter: blur(4px);
       border-radius: 1.1rem;
       overflow: hidden;
-      box-shadow: 0 2px 12px 0 rgba(0,0,0,0.11);
+      box-shadow: 0 4px 25px rgba(0,0,0,0.45);
       display: flex;
       flex-direction: column;
       align-items: center;
-      transition: transform 0.13s;
+      transition: transform 0.2s, box-shadow 0.2s;
       cursor: pointer;
-      position: relative;
-      min-width: 170px;
+      min-width: 150px;
     }
     .movie-card:hover {
-      transform: translateY(-8px) scale(1.04);
-      box-shadow: 0 8px 28px 0 rgba(35,101,223,0.21);
+      transform: translateY(-6px);
+      box-shadow: 0 8px 35px rgba(0,0,0,0.55);
     }
     .movie-poster {
       width: 100%;
-      max-width: 160px;
       height: 230px;
       object-fit: cover;
       border-radius: 1rem 1rem 0 0;
@@ -234,29 +249,31 @@
       font-size: 1.05rem;
       font-weight: 700;
       color: #fff;
-      margin-bottom: 0.18rem;
+      margin-bottom: 0.25rem;
       text-align: center;
-      line-height: 1.1;
-      min-height: 2.2em;
+      line-height: 1.2;
+      padding: 0 0.5rem;
     }
     .movie-meta {
       font-size: 0.94rem;
       color: #5AC3E7;
       font-weight: 600;
       text-align: center;
-      margin-bottom: 0.3rem;
-      line-height: 1.1;
+      margin-bottom: 0.6rem;
+      line-height: 1.2;
     }
+
     .search-bar {
       padding: 0.5rem 1.3rem;
       border-radius: 999px;
       border: none;
       font-size: 1rem;
-      color: #23343B;
+      color: #0F1D22;
       background: #fff;
       width: 210px;
     }
   </style>
+
   <script>
     const carouselMovies = [
       {
@@ -272,7 +289,6 @@
         desc: "Sebuah program canggih bernama Ares dikirim dari dunia digital ke dunia nyata dalam sebuah misi berbahaya, menandai pertemuan pertama umat manusia dengan makhluk kecerdasan buatan (A.I.).",
         bg: "https://wallpapercave.com/wp/wp15265122.jpg",
         poster: "https://media.themoviedb.org/t/p/w300_and_h450_bestv2/chpWmskl3aKm1aTZqUHRCtviwPy.jpg"
-
       },
       {
         title: "JEMBATAN SHIRATAL MUSTAQIM",
@@ -280,7 +296,6 @@
         desc: "Setelah bencana tsunami dan munculnya rumor tentang penggelapan dana bantuan, Arya sering diteror oleh penglihatan tentang sebuah tempat yang diyakini sebagai Jembatan Shiratal Mustaqim — jembatan akhirat yang menghubungkan ke surga dan membentang di atas neraka.",
         bg: "https://cdn.medcom.id/dynamic/content/2025/10/08/1782683/1T6BIxASwu.jpg?w=1024",
         poster: "https://media.themoviedb.org/t/p/w300_and_h450_bestv2/pvmnrIov0uKlPmcrABOaCa7ucud.jpg"
-
       },
       {
         title: "Wed or Wait",
@@ -299,36 +314,43 @@
     ];
     let carouselIndex = 0;
     let carouselTimer;
+
     function showCarousel(idx) {
       const slides = document.querySelectorAll('.carousel-slide');
       const dots = document.querySelectorAll('.carousel-dot');
-      slides.forEach((slide,i)=>{
+      slides.forEach((slide, i) => {
         slide.classList.remove('active');
         dots[i].classList.remove('active');
-        if(i===idx) {
+        if (i === idx) {
           slide.classList.add('active');
           dots[i].classList.add('active');
         }
       });
       carouselIndex = idx;
     }
+
     function nextCarousel() {
       carouselIndex = (carouselIndex + 1) % carouselMovies.length;
       showCarousel(carouselIndex);
     }
+
     function startCarousel() {
       carouselTimer = setInterval(nextCarousel, 3400);
     }
+
     function stopCarousel() {
       clearInterval(carouselTimer);
     }
-    window.onload = function(){
-      // render carousel
+
+    window.onload = function() {
       const carousel = document.getElementById('carousel');
-      carouselMovies.forEach((movie,i)=>{
+      const dots = document.getElementById('carousel-dots');
+
+      carouselMovies.forEach((movie, i) => {
         const slide = document.createElement('div');
         slide.className = 'carousel-slide';
-        if(i===0) slide.classList.add('active');
+        if (i === 0) slide.classList.add('active');
+
         slide.innerHTML = `
           <div class="carousel-img-bg" style="background-image:url('${movie.bg}');"></div>
           <div class="carousel-content">
@@ -342,49 +364,41 @@
           </div>
         `;
         carousel.appendChild(slide);
-      });
-      // dots
-      const dots = document.getElementById('carousel-dots');
-      carouselMovies.forEach((_,i)=>{
+
         const dot = document.createElement('span');
-        dot.className = 'carousel-dot' + (i===0?' active':'');
-        dot.onclick = ()=>{
+        dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+        dot.onclick = () => {
           showCarousel(i);
           stopCarousel();
           startCarousel();
         };
         dots.appendChild(dot);
       });
+
       showCarousel(0);
       startCarousel();
-    }
+    };
   </script>
 </head>
 <body>
-  <header class="header-nav flex justify-between items-center px-10 py-5">
-    <div class="flex items-center space-x-3">
-      <img src="https://img.icons8.com/ios-filled/50/ffffff/video-projector.png" class="w-10 h-10" alt="Cinemate logo">
-      <span class="text-white text-2xl font-bold tracking-wide">CINEMATE</span>
-    </div>
-    <nav class="flex items-center space-x-7">
-      <a href="homepage.html" class="text-white text-lg hover:text-blue-400">Home</a>
-      <a href="booking.html" class="text-white text-lg hover:text-blue-400">Booking</a>
-      <a href="filmdetail.html" class="text-white text-lg hover:text-blue-400">Film Detail</a>
-      <a href="foodorder.html" class="text-white text-lg hover:text-blue-400">Food Order</a>
-      <a href="interest.html" class="text-white text-lg hover:text-blue-400">Interest</a>
-      <a href="orderhistory.html" class="text-white text-lg hover:text-blue-400">Order History</a>
-      <a href="login.html" class="text-white text-lg hover:text-blue-400">Login</a>
-      <a href="movies.html" class="text-white text-lg hover:text-blue-400 font-bold">Movies</a>
+  <header class="header-nav">
+    <a href="homepage.html" class="no-underline">
+      <div class="flex items-center space-x-3">
+        <img src="https://img.icons8.com/ios-filled/50/ffffff/video-projector.png" class="w-10 h-10" alt="Logo Cinemate">
+        <span class="text-white text-2xl font-bold tracking-wide">CINEMATE</span>
+      </div>
+    </a>
+    <nav class="flex items-center space-x-6">
       <input type="text" class="search-bar" placeholder="Search movies" />
     </nav>
   </header>
+
   <main class="pt-8">
-    <!-- Carousel Poster Film Section -->
     <div class="carousel-section">
       <div class="carousel" id="carousel"></div>
       <div class="carousel-dots" id="carousel-dots"></div>
     </div>
-    <!-- Filter -->
+
     <div class="movie-filters">
       <button class="filter-btn active">Now Showing</button>
       <button class="filter-btn">Upcoming</button>
@@ -404,28 +418,27 @@
         <option>&gt; 2h</option>
       </select>
     </div>
-    <!-- Grid List Film -->
+
     <div class="movie-grid">
-      <!-- Now Showing -->
       <div class="movie-card">
-        <img src="https://www.themoviedb.org/t/p/w600_and_h900_bestv2/eH1zvGk8XTw3F4zD6a6kA7dM8Ip.jpg" class="movie-poster" alt="Mufasa Poster">
-        <div class="movie-title">MUFFASA</div>
-        <div class="movie-meta">Adventure · 1h 58m</div>
+        <img src="https://media.themoviedb.org/t/p/w600_and_h900_bestv2/ef2QSeBkrYhAdfsWGXmp0lvH0T1.jpg" class="movie-poster" alt="Mufasa Poster">
+        <div class="movie-title">Predator: Badlands</div>
+        <div class="movie-meta">Action,Science Fiction,Adventure · 1h 47m</div>
       </div>
       <div class="movie-card">
-        <img src="https://www.themoviedb.org/t/p/w600_and_h900_bestv2/xD9MyW9xwFRd7h5g8mUjJvN3bD9.jpg" class="movie-poster" alt="Miracle Cell Poster">
-        <div class="movie-title">Miracle In Cell</div>
-        <div class="movie-meta">Drama · 2h 27m</div>
+        <img src="https://media.themoviedb.org/t/p/w600_and_h900_bestv2/oD3Eey4e4Z259XLm3eD3WGcoJAh.jpg" class="movie-poster" alt="Miracle Cell Poster">
+        <div class="movie-title">Now You See Me: Now You Don't</div>
+        <div class="movie-meta">Thriller,Crime,Mystery · 1h 52m</div>
       </div>
       <div class="movie-card">
-        <img src="https://www.themoviedb.org/t/p/w600_and_h900_bestv2/2qM3uE3RrFQElZf2wB6uS7t8kPp.jpg" class="movie-poster" alt="Spiderman Poster">
-        <div class="movie-title">SPIDER-MAN: ACROSS THE SPIDER-VERSE</div>
-        <div class="movie-meta">Action/Comedy · 2h 20m</div>
+        <img src="https://media.themoviedb.org/t/p/w600_and_h900_bestv2/r83HIGA0mUiy7I9qVr17pF7SCDP.jpg" class="movie-poster" alt="Spider-Man Poster">
+        <div class="movie-title">Good Fortune</div>
+        <div class="movie-meta">Comedy,Fantasy · 1h 38m</div>
       </div>
       <div class="movie-card">
-        <img src="https://www.themoviedb.org/t/p/w600_and_h900_bestv2/5aOv9sE1vZ3qGhXEbQdHcA9Sb3n.jpg" class="movie-poster" alt="Moana 2 Poster">
-        <div class="movie-title">MOANA 2</div>
-        <div class="movie-meta">Animation · 1h 40m</div>
+        <img src="https://media.themoviedb.org/t/p/w600_and_h900_bestv2/xUWUODKPIilQoFUzjHM6wKJkP3Y.jpg" class="movie-poster" alt="Moana 2 Poster">
+        <div class="movie-title">Black Phone 2</div>
+        <div class="movie-meta">Horror,Thriller · 1h 54m</div>
       </div>
       <div class="movie-card">
         <img src="https://www.themoviedb.org/t/p/w600_and_h900_bestv2/bZlDgB1r8N6oQ6QYWqV2qJ0i4Zt.jpg" class="movie-poster" alt="Sonic 3 Poster">
@@ -437,7 +450,6 @@
         <div class="movie-title">JOHN</div>
         <div class="movie-meta">Action/Thriller · 1h 37m</div>
       </div>
-      <!-- Upcoming -->
       <div class="movie-card">
         <img src="https://www.themoviedb.org/t/p/w600_and_h900_bestv2/8rN95I2WiTqGk6h2c2qA9vE2nQd.jpg" class="movie-poster" alt="Werewolves Poster">
         <div class="movie-title">WEREWOLVES</div>
@@ -458,7 +470,7 @@
         <div class="movie-title">SURUP</div>
         <div class="movie-meta">Horror · 1h 47m</div>
       </div>
-      <!-- Add more movie cards as needed -->
+      <!-- bisa ditambah lagi -->
     </div>
   </main>
 </body>

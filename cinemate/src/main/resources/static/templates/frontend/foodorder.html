@@ -7,13 +7,13 @@
   <link href="dist/output.css" rel="stylesheet">
   <style>
     body {
-      background: radial-gradient(ellipse at top left, #23343B 0%, #23343B 60%, #26434C 100%);
+      background: radial-gradient(ellipse at top left, #0F1D22 0%, #0F1D22 60%, #152A30 100%);
       color: #fff;
       font-family: 'Montserrat', Arial, sans-serif;
       min-height: 100vh;
     }
     .fnb-card {
-      background: rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.15);
       border-radius: 1.5rem;
       padding: 2.5rem 2rem 2rem 2rem;
       max-width: 1050px;
@@ -223,25 +223,15 @@
 </head>
 <body>
   <header class="flex justify-between items-center px-10 py-5">
-    <div class="flex items-center space-x-3">
-      <img src="https://img.icons8.com/ios-filled/50/ffffff/video-projector.png" class="w-10 h-10" alt="Cinemate logo">
-      <span class="text-white text-2xl font-bold tracking-wide">CINEMATE</span>
-    </div>
+    <a href="homepage.html" class="no-underline">
+      <div class="flex items-center space-x-3">
+        <img src="https://img.icons8.com/ios-filled/50/ffffff/video-projector.png" class="w-10 h-10" alt="Cinemate logo">
+        <span class="text-white text-2xl font-bold tracking-wide">CINEMATE</span>
+      </div>
+    </a>
     <nav class="flex items-center space-x-7">
-      <a href="homepage.html" class="text-white text-lg hover:text-blue-400">Home</a>
-      <a href="booking.html" class="text-white text-lg hover:text-blue-400">Booking</a>
-      <a href="filmdetail.html" class="text-white text-lg hover:text-blue-400">Film Detail</a>
-      <a href="foodorder.html" class="text-white text-lg hover:text-blue-400 font-bold">Food Order</a>
-      <a href="interest.html" class="text-white text-lg hover:text-blue-400">Interest</a>
-      <a href="orderhistory.html" class="text-white text-lg hover:text-blue-400">Order History</a>
-      <a href="login.html" class="text-white text-lg hover:text-blue-400">Login</a>
-      <a href="#" class="text-white text-lg hover:text-blue-400">Movies</a>
       <div class="relative">
-        <input type="text" class="rounded-full px-3 py-1 text-sm bg-white text-gray-900 focus:outline-none" placeholder="Search movies">
         <span class="absolute right-3 top-1.5 text-gray-400">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 103 10.5a7.5 7.5 0 0013.15 6.15z" />
-          </svg>
         </span>
       </div>
     </nav>
