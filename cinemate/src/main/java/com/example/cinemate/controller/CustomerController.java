@@ -26,24 +26,20 @@ public class CustomerController {
         try {
             Customer savedCustomer = customerService.register(req);
 
-            // Konversi ke DTO
             CustomerDto dto = new CustomerDto();
             dto.setId(savedCustomer.getId());
             dto.setFirstName(savedCustomer.getFirstName());
             dto.setLastName(savedCustomer.getLastName());
             dto.setEmail(savedCustomer.getEmail());
-            dto.setPassword(savedCustomer.getPassword());
 
-            return ResponseEntity.ok(dto); // sukses
+            return ResponseEntity.ok(dto);
 
         } catch (RuntimeException e) {
-            // Mengembalikan error sebagai JSON
+            // Kirim error JSON
             Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("error", e.getMessage());
+            errorResponse.put("message", e.getMessage());
 
-            return ResponseEntity
-                    .badRequest()
-                    .body(errorResponse); // error 400
+            return ResponseEntity.badRequest().body(errorResponse);
         }
     }
 
@@ -52,7 +48,7 @@ public class CustomerController {
         Customer customer = customerService.login(req);
 
         if (customer == null) {
-            throw new RuntimeException("Invalid email or password");
+            throw new RuntimeException("Email atau password tidak valid");
         }
 
         CustomerDto dto = new CustomerDto();
