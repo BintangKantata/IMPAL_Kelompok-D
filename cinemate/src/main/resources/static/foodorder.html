@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pesan Makanan & Minuman - Cinemate</title>
   <link href="dist/output.css" rel="stylesheet">
+
   <style>
     body {
       background: radial-gradient(ellipse at top left, #0F1D22 0%, #0F1D22 60%, #152A30 100%);
@@ -12,247 +13,238 @@
       font-family: 'Montserrat', Arial, sans-serif;
       min-height: 100vh;
     }
-    .fnb-card {
-      background: rgba(0,0,0,0.15);
-      border-radius: 1.5rem;
-      padding: 2.5rem 2rem 2rem 2rem;
-      max-width: 1050px;
-      margin: auto;
-      box-shadow: 0 4px 32px 0 rgba(0,0,0,0.10);
-    }
-    .fnb-title {
-      font-size: 1.35rem;
-      font-weight: 800;
-      color: #fff;
-      background: #2365df;
-      border-radius: 0.7rem 0.7rem 0 0;
-      padding: 0.7rem 1.7rem;
-      display: flex;
-      align-items: center;
-      gap: 0.7rem;
-      width: fit-content;
-      margin-bottom: 1.5rem;
-    }
-    .menu-grid {
+
+    .container {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1.3rem;
-      margin-bottom: 2rem;
+      grid-template-columns: 70% 30%;
+      gap: 1.2rem;
+      width: 90%;
+      margin: auto;
+      padding-top: 1.5rem;
     }
-    .food-item {
-      background: #fff;
-      color: #23343B;
-      border-radius: 1rem;
-      box-shadow: 0 2px 12px 0 rgba(0,0,0,0.08);
-      padding: 1.1rem 1rem 1.2rem 1rem;
+
+    .menu-list {
       display: flex;
       flex-direction: column;
+      gap: 1rem;
+    }
+
+    .food-item {
+      display: flex;
+      gap: 1rem;
+      background: #fff;
+      border-radius: 0.8rem;
+      padding: 1rem;
+      color: #1f2b30;
       align-items: center;
-      min-width: 170px;
-      max-width: 210px;
-      position: relative;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.18);
     }
-    .food-type {
-      color: #2365df;
-      font-weight: bold;
-      font-size: 0.95rem;
-      letter-spacing: 0.04em;
-      margin-bottom: 0.4rem;
-      text-align: center;
-    }
+
     .food-img {
-      width: 55px;
-      height: 55px;
+      width: 80px;
+      height: 80px;
       object-fit: contain;
-      margin-bottom: 0.5rem;
     }
+
+    .food-info {
+      flex: 1;
+    }
+
     .food-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: .25rem;
+    }
+
+    .food-desc {
+      font-size: .9rem;
+      color: #2b4a52;
+      margin-bottom: .4rem;
+    }
+
+    .food-price {
       font-size: 1rem;
       font-weight: 700;
-      margin-bottom: 0.2rem;
-      text-align: center;
-    }
-    .food-desc {
-      font-size: 0.95rem;
-      color: #26434C;
-      text-align: center;
-      margin-bottom: 0.8rem;
-    }
-    .food-price {
-      font-size: 1.06rem;
-      font-weight: bold;
       color: #2365df;
-      margin-bottom: 0.6rem;
+      margin-bottom: .6rem;
     }
-    .food-action {
-      display: flex;
-      align-items: center;
-      gap: 0.55rem;
-      margin-bottom: 0.2rem;
-      justify-content: center;
-    }
-    .qty-btn {
-      background: #5AC3E7;
-      color: #23343B;
-      border-radius: 50%;
-      border: none;
-      width: 32px;
-      height: 32px;
-      font-size: 1.2rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .qty-btn:hover {
+
+    .add-btn {
       background: #2365df;
-      color: #fff;
-    }
-    .qty-num {
-      font-size: 1.08rem;
-      font-weight: bold;
-      min-width: 28px;
-      text-align: center;
-      color: #2365df;
-      background: #e8f6ff;
-      border-radius: 0.6rem;
-      padding: 0.2rem 0.6rem;
-    }
-    .total-section {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 1.3rem;
-      gap: 2rem;
-    }
-    .total-label {
-      font-size: 1.15rem;
       color: #fff;
       font-weight: 700;
-      letter-spacing: 0.04em;
-    }
-    .total-value {
-      font-size: 1.15rem;
-      color: #5AC3E7;
-      font-weight: 800;
-    }
-    .checkout-btn {
-      background: #2365df;
-      color: #fff;
-      font-size: 1.2rem;
-      font-weight: bold;
-      border-radius: 1rem;
-      padding: 0.85rem 2.8rem;
-      border: none;
-      box-shadow: 0 2px 12px 0 rgba(0,0,0,0.10);
+      padding: .45rem 1.3rem;
+      border-radius: .6rem;
       cursor: pointer;
-      transition: background 0.2s;
+      border: none;
     }
-    .checkout-btn:hover {
-      background: #1747a7;
+
+    .add-btn:hover {
+      background: #194ea4;
+    }
+
+    .cart-box {
+      background: rgba(0,0,0,0.2);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      position: sticky;
+      top: 90px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      height: fit-content;
+    }
+
+    .cart-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: .8rem;
+      text-align: center;
+    }
+
+    .cart-empty {
+      text-align: center;
+      font-size: .9rem;
+      opacity: 0.7;
+    }
+
+    .cart-item {
+      font-size: .92rem;
+      margin-bottom: .4rem;
+      border-bottom: 1px solid rgba(255,255,255,.2);
+      padding-bottom: .4rem;
+    }
+
+    .checkout-btn {
+      margin-top: 1rem;
+      width: 100%;
+      background: #2365df;
+      padding: .75rem 0;
+      border-radius: .6rem;
       color: #fff;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
     }
-    @media(max-width:900px){
-      .fnb-card{max-width:100vw;padding:1rem;}
-      .menu-grid{grid-template-columns:repeat(2,1fr);}
+
+    .remove-btn {
+      background: #e74c3c;
+      border: none;
+      border-radius: 5px;
+      padding: 4px 8px;
+      color: #fff;
+      cursor: pointer;
+      float: right;
     }
-    @media(max-width:600px){
-      .menu-grid{grid-template-columns:repeat(1,1fr);}
-      .food-item{min-width:unset;max-width:100vw;}
-      .total-section{flex-direction:column;align-items:stretch;}
-      .checkout-btn{width:100%;}
+    .remove-btn:hover {
+      background: #c0392b;
+    }
+
+
+    @media(max-width: 900px){
+      .container{
+        grid-template-columns: 1fr;
+      }
+      .cart-box{
+        position: static;
+      }
     }
   </style>
-  <script>
-    // Dummy food data
-    const foodData = [
-      {type:'COMBO', name:'Paket Couple 1', desc:'1 Popcorn(M), 2 Pepsi', price:70000, img:'https://img.icons8.com/color/96/popcorn.png'},
-      {type:'COMBO', name:'Paket Couple 1', desc:'1 Popcorn(M), 2 Pepsi', price:70000, img:'https://img.icons8.com/color/96/popcorn.png'},
-      {type:'COMBO', name:'Paket Couple 1', desc:'1 Popcorn(M), 2 Pepsi', price:70000, img:'https://img.icons8.com/color/96/popcorn.png'},
-      {type:'COMBO', name:'Paket Couple 1', desc:'1 Popcorn(M), 2 Pepsi', price:70000, img:'https://img.icons8.com/color/96/popcorn.png'},
-      {type:'DRINK', name:'Paket Couple 1', desc:'1 Popcorn(M), 2 Pepsi', price:70000, img:'https://img.icons8.com/color/96/cola.png'},
-      {type:'DRINK', name:'Paket Couple 1', desc:'1 Popcorn(M), 2 Pepsi', price:70000, img:'https://img.icons8.com/color/96/cola.png'},
-      {type:'DRINK', name:'Paket Couple 1', desc:'1 Popcorn(M), 2 Pepsi', price:70000, img:'https://img.icons8.com/color/96/cola.png'},
-      {type:'DRINK', name:'Paket Couple 1', desc:'1 Popcorn(M), 2 Pepsi', price:70000, img:'https://img.icons8.com/color/96/cola.png'},
-      {type:'SNACK', name:'Paket Couple 1', desc:'1 Popcorn(M), 2 Pepsi', price:70000, img:'https://img.icons8.com/color/96/pancake.png'},
-      {type:'SNACK', name:'Paket Couple 1', desc:'1 Popcorn(M), 2 Pepsi', price:70000, img:'https://img.icons8.com/color/96/pancake.png'},
-      {type:'SNACK', name:'Paket Couple 1', desc:'1 Popcorn(M), 2 Pepsi', price:70000, img:'https://img.icons8.com/color/96/pancake.png'},
-      {type:'SNACK', name:'Paket Couple 1', desc:'1 Popcorn(M), 2 Pepsi', price:70000, img:'https://img.icons8.com/color/96/pancake.png'},
-    ];
-
-    let cartQty = Array(foodData.length).fill(0);
-
-    function renderMenu() {
-      const menuGrid = document.getElementById('menuGrid');
-      menuGrid.innerHTML = '';
-      foodData.forEach((item,idx) => {
-        menuGrid.innerHTML += `
-          <div class="food-item">
-            <div class="food-type">${item.type}</div>
-            <img src="${item.img}" class="food-img"/>
-            <div class="food-name">${item.name}</div>
-            <div class="food-desc">${item.desc}</div>
-            <div class="food-price">Rp ${item.price.toLocaleString('id-ID')},00</div>
-            <div class="food-action">
-              <button class="qty-btn" onclick="changeQty(${idx}, -1)">-</button>
-              <span class="qty-num" id="qty${idx}">${cartQty[idx]}</span>
-              <button class="qty-btn" onclick="changeQty(${idx}, 1)">+</button>
-            </div>
-          </div>
-        `;
-      });
-      updateTotal();
-    }
-    function changeQty(idx, add) {
-      cartQty[idx] += add;
-      if(cartQty[idx]<0)cartQty[idx]=0;
-      document.getElementById('qty'+idx).innerText = cartQty[idx];
-      updateTotal();
-    }
-    function updateTotal() {
-      let total = 0;
-      cartQty.forEach((qty,i) => {
-        total += qty * foodData[i].price;
-      });
-      document.getElementById('totalValue').innerText = 'Rp ' + total.toLocaleString('id-ID') + ',00';
-    }
-    function checkout() {
-      alert('Pesanan berhasil! Total: ' + document.getElementById('totalValue').innerText);
-    }
-    window.onload = renderMenu;
-  </script>
 </head>
 <body>
 <header class="flex justify-between items-center px-10 py-5">
-  <a href="homepage.html" class="no-underline">
+  <a href="homepage.html">
     <div class="flex items-center space-x-3">
-      <img src="https://img.icons8.com/ios-filled/50/ffffff/video-projector.png" class="w-10 h-10" alt="Cinemate logo">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/video-projector.png" class="w-10 h-10">
       <span class="text-white text-2xl font-bold tracking-wide">CINEMATE</span>
     </div>
   </a>
-  <nav class="flex items-center space-x-7">
-    <div class="relative">
-        <span class="absolute right-3 top-1.5 text-gray-400">
-        </span>
-    </div>
-  </nav>
 </header>
-<main class="flex justify-center items-start py-10 px-4">
-  <div class="fnb-card w-full">
-    <div class="fnb-title">
-      <img src="https://img.icons8.com/ios-filled/32/ffffff/restaurant-menu.png"/>
-      Select Food & Beverage
-    </div>
-    <div id="menuGrid" class="menu-grid">
-      <!-- JS Render Menu Here -->
-    </div>
-    <div class="total-section">
-      <div>
-        <span class="total-label">Total Price:</span>
-        <span class="total-value" id="totalValue">Rp 0,00</span>
-      </div>
-      <button class="checkout-btn" onclick="checkout()">CHECKOUT</button>
-    </div>
+
+<main class="container">
+
+  <!-- Menu Section -->
+  <div class="menu-list" id="menuList">
   </div>
+
+  <!-- Cart Section -->
+  <div class="cart-box">
+    <div class="cart-title">Keranjang Saya</div>
+    <div id="cartItems" class="cart-empty">Belum ada item ditambahkan.</div>
+    <div class="mt-3 font-bold">Total: <span id="totalValue">Rp 0</span></div>
+    <button class="checkout-btn" onclick="checkout()">Checkout</button>
+  </div>
+
 </main>
+<script>
+const foodData = [
+  {name:'Paket Popcorn 1', desc:'1 Popcorn(S) + Pepsi(S)', price:45000, img:'https://img.icons8.com/color/96/popcorn.png'},
+  {name:'Combo Special', desc:'Popcorn + Soft Drink', price:55000, img:'https://img.icons8.com/color/96/popcorn.png'},
+  {name:'Paket Minum 1', desc:'2 Soft Drink Small', price:30000, img:'https://img.icons8.com/color/96/cola.png'},
+];
+
+let cart = [];
+
+function renderMenu(){
+  const list = document.getElementById('menuList');
+  list.innerHTML = '';
+  foodData.forEach((item,i)=>{
+    list.innerHTML += `
+      <div class="food-item">
+        <img src="${item.img}" class="food-img" />
+        <div class="food-info">
+          <div class="food-name">${item.name}</div>
+          <div class="food-desc">${item.desc}</div>
+          <div class="food-price">Rp ${item.price.toLocaleString('id-ID')}</div>
+          <button class="add-btn" onclick="addToCart(${i})">Tambah</button>
+        </div>
+      </div>
+    `;
+  });
+}
+
+function addToCart(idx){
+  cart.push(foodData[idx]);
+  renderCart();
+}
+
+function removeFromCart(index){
+  cart.splice(index,1);
+  renderCart();
+}
+
+function renderCart(){
+  const cartBox = document.getElementById('cartItems');
+  if(cart.length === 0){
+    cartBox.innerHTML = 'Belum ada item ditambahkan.';
+    cartBox.className = 'cart-empty';
+    document.getElementById('totalValue').innerText = 'Rp 0';
+    return;
+  }
+
+  cartBox.className = '';
+  let html = '';
+  let total = 0;
+  cart.forEach((item, i)=>{
+    html += `
+      <div class="cart-item">
+        ${item.name} - Rp ${item.price.toLocaleString('id-ID')}
+        <button class="remove-btn" onclick="removeFromCart(${i})">❌</button>
+      </div>`;
+    total += item.price;
+  });
+
+  cartBox.innerHTML = html;
+  document.getElementById('totalValue').innerText = 'Rp ' + total.toLocaleString('id-ID');
+}
+
+function checkout(){
+  if(cart.length === 0) return alert('Keranjang masih kosong!');
+  alert('Pesanan kamu sudah diproses!');
+}
+
+renderMenu();
+</script>
+
+
 </body>
 </html>
+
