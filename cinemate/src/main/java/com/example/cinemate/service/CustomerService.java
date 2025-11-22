@@ -14,6 +14,9 @@ public class CustomerService {
     private CustomerRepository customerRepository;
 
     public Customer register(CustomerRegisterRequestDto req) {
+        if (customerRepository.existsByEmail(req.getEmail())) {
+            throw new RuntimeException("Email sudah terdaftar");
+        }
         Customer customer = new Customer();
         customer.setFirstName(req.getFirstName());
         customer.setLastName(req.getLastName());
