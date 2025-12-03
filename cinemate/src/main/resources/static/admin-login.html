@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin Login</title>
+</head>
+<body>
+
+<h1>Admin Login</h1>
+
+<form id="adminLoginForm">
+  <div>
+    <label for="email">Email:</label><br>
+    <input type="email" id="email" name="email" required>
+  </div>
+  <br>
+  <div>
+    <label for="password">Password:</label><br>
+    <input type="password" id="password" name="password" required>
+  </div>
+  <br>
+  <div>
+    <button type="submit" id="btnLogin">Login</button>
+    <button type="button" id="btnBack">Back</button>
+  </div>
+</form>
+
+<div id="errorMsg" style="color: red; margin-top: 12px; display: none;"></div>
+
+<script>
+  document.getElementById('adminLoginForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+
+    // clear previous error
+    const errEl = document.getElementById('errorMsg');
+    errEl.style.display = 'none';
+    errEl.textContent = '';
+
+    try {
+      const res = await fetch('http://localhost:8080/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        // backend returns { error: "..." } or similar
+        const msg = (data && (data.error || data.message)) ? (data.error || data.message) : 'Login failed';
+        errEl.textContent = msg;
+        errEl.style.display = 'block';
+        return;
+      }
+
+      // sukses -> simpan dan redirect
+      localStorage.setItem('admin', JSON.stringify(data));
+      window.location.href = 'admin-dashboard.html';
+
+    } catch (err) {
+      errEl.textContent = 'Gagal menghubungi server.';
+      errEl.style.display = 'block';
+    }
+  });
+
+  document.getElementById('btnBack').addEventListener('click', function() {
+    // ubah target sesuai halaman utama aplikasi
+    window.location.href = 'homepage.html';
+  });
+</script>
+
+</body>
+</html>
