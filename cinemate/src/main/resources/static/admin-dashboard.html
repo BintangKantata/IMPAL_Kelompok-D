@@ -1,10 +1,238 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Admin Dashboard</title>
+    <meta charset="utf-8" />
+    <title>Admin - Film CRUD</title>
 </head>
 <body>
-<p>heheheha</p>
+
+<h1>Admin Dashboard</h1>
+
+<h2 id="formTitle">Add New Film</h2>
+
+<form id="filmForm">
+    <input type="hidden" id="filmId">
+
+    <div>
+        <label>Title:</label><br>
+        <input type="text" id="title" required>
+    </div><br>
+
+    <div>
+        <label>Genre:</label><br>
+        <div id="genre-container">
+            <label><input type="checkbox" value="HORROR"> Horror</label><br>
+            <label><input type="checkbox" value="ACTION"> Action</label><br>
+            <label><input type="checkbox" value="COMEDY"> Comedy</label><br>
+            <label><input type="checkbox" value="THRILLER"> Thriller</label><br>
+            <label><input type="checkbox" value="SCIENCE_FICTION"> Science Fiction</label><br>
+            <label><input type="checkbox" value="DOCUMENTARY"> Documentary</label><br>
+            <label><input type="checkbox" value="ADVENTURE"> Adventure</label><br>
+            <label><input type="checkbox" value="ANIMATION">Animation</label><br>
+            <label><input type="checkbox" value="MYSTERY">Mystery</label><br>
+            <label><input type="checkbox" value="WAR">War</label><br>
+            <label><input type="checkbox" value="FICTION">Fiction</label><br>
+            <label><input type="checkbox" value="SPY">Spy</label><br>
+            <label><input type="checkbox" value="ROMANCE">Romance</label><br>
+            <label><input type="checkbox" value="FANTASY">Fantasy</label><br>
+            <label><input type="checkbox" value="DRAMA">Drama</label><br>
+            <label><input type="checkbox" value="BIOGRAPHY">Biography</label><br>
+            <label><input type="checkbox" value="FAMILY">Family</label><br>
+            <label><input type="checkbox" value="HISTORICAL">Historical</label><br>
+            <label><input type="checkbox" value="CRIME">Crime</label><br>
+            <label><input type="checkbox" value="SUPERHERO">Superhero</label><br>
+            <label><input type="checkbox" value="PSYCHOLOGICAL">Psychological</label><br>
+            <label><input type="checkbox" value="CYBERPUNK">Cyberpunk</label><br>
+            <label><input type="checkbox" value="STEAMPUNK">Steampunk</label><br>
+            <label><input type="checkbox" value="ANTHOLOGY">Anthology</label><br>
+            <label><input type="checkbox" value="ZOMBIE">Zombie</label><br>
+            <label><input type="checkbox" value="ART">Art</label><br>
+            <label><input type="checkbox" value="POLITICAL">Political</label><br>
+            <label><input type="checkbox" value="MILITARY">Military</label><br>
+            <label><input type="checkbox" value="SURVIVAL">Survival</label><br>
+            <label><input type="checkbox" value="SPACE">Space</label><br>
+            <label><input type="checkbox" value="DISASTER">Disaster</label><br>
+            <label><input type="checkbox" value="SCHOOL">School</label><br>
+            <label><input type="checkbox" value="WILDLIFE">Wildlife</label><br>
+            <label><input type="checkbox" value="ANIMALS">Animals</label><br>
+            <label><input type="checkbox" value="FUTURISTIC">Futuristic</label><br>
+        </div>
+    </div><br>
+
+    <div>
+        <label>Duration (minutes):</label><br>
+        <input type="number" id="duration" required>
+    </div><br>
+
+    <div>
+        <label>Year:</label><br>
+        <input type="number" id="tahun" required>
+    </div><br>
+
+    <div>
+        <label>Description:</label><br>
+        <textarea id="description" rows="4" cols="40" required></textarea>
+    </div><br>
+
+    <button type="submit" id="btnSave">Save</button>
+    <button type="button" id="btnCancel" style="display:none;">Cancel Edit</button>
+</form>
+
+<hr>
+
+<h2>Film List</h2>
+<table border="1" cellpadding="6">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Genre</th>
+        <th>Duration</th>
+        <th>Year</th>
+        <th>Description</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody id="filmTable"></tbody>
+</table>
+
+<div id="message" style="color: red; margin-top: 10px;"></div>
+
+<script>
+    const API_URL = "http://localhost:8080/api/admin/films";
+
+    document.addEventListener("DOMContentLoaded", loadFilms);
+
+    async function loadFilms() {
+      try {
+        const res = await fetch(API_URL);
+        const films = await res.json();
+
+        const tbody = document.getElementById("filmTable");
+        tbody.innerHTML = "";
+
+        films.forEach(film => {
+          tbody.innerHTML += `
+            <tr>
+              <td>${film.id}</td>
+              <td>${film.title}</td>
+              <td>${film.genre}</td>
+              <td>${film.duration}</td>
+              <td>${film.tahun}</td>
+              <td>${film.description}</td>
+              <td>
+                <button onclick="editFilm(${film.id}, '${film.title}', '${film.genre}', ${film.duration}, ${film.tahun}, \`${film.description}\`)">Edit</button>
+                <button onclick="deleteFilm(${film.id})">Delete</button>
+              </td>
+            </tr>
+          `;
+        });
+
+      } catch (err) {
+        showError("Failed to load films");
+      }
+    }
+
+    document.getElementById("filmForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const id = document.getElementById("filmId").value;
+
+    const checkboxes = document.querySelectorAll('#genre-container input[type="checkbox"]:checked');
+    const genres = Array.from(checkboxes).map(cb => cb.value);
+
+    const filmData = {
+        title: document.getElementById("title").value,
+        duration: document.getElementById("duration").value,
+        tahun: document.getElementById("tahun").value,
+        description: document.getElementById("description").value,
+        genres: genres
+    };
+
+    try {
+        let response;
+
+        if (id === "") {
+            response = await fetch(API_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(filmData)
+            });
+        } else {
+            response = await fetch(`${API_URL}/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(filmData)
+            });
+        }
+
+        if (!response.ok) {
+            showError("Failed to save film");
+            return;
+        }
+
+        resetForm();
+        loadFilms();
+
+    } catch (err) {
+        showError("Server error");
+        console.error(err);
+    }
+});
+
+    function editFilm(id, title, genres, duration, tahun, description) {
+    document.getElementById("filmId").value = id;
+    document.getElementById("title").value = title;
+    document.getElementById("duration").value = duration;
+    document.getElementById("tahun").value = tahun;
+    document.getElementById("description").value = description;
+
+    // RESET semua checkbox terlebih dahulu
+    document.querySelectorAll('#genre-container input[type="checkbox"]').forEach(cb => cb.checked = false);
+
+    // CENTANG GENRE YANG DIMILIKI FILM
+    genres.forEach(g => {
+        const checkbox = document.querySelector(`#genre-container input[value="${g}"]`);
+        if (checkbox) checkbox.checked = true;
+    });
+
+    // TAMPILKAN UI EDIT
+    document.getElementById("formTitle").innerText = "Edit Film";
+    document.getElementById("btnCancel").style.display = "inline";
+}
+
+    document.getElementById("btnCancel").addEventListener("click", resetForm);
+
+    function resetForm() {
+      document.getElementById("filmForm").reset();
+      document.getElementById("filmId").value = "";
+      document.getElementById("formTitle").innerText = "Add New Film";
+      document.getElementById("btnCancel").style.display = "none";
+      document.getElementById("message").innerText = "";
+    }
+
+    async function deleteFilm(id) {
+      if (!confirm("Delete this film?")) return;
+
+      try {
+        const res = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+
+        if (!res.ok) {
+          showError("Failed to delete film");
+          return;
+        }
+
+        loadFilms();
+      } catch (err) {
+        showError("Server error");
+      }
+    }
+
+    function showError(message) {
+      document.getElementById("message").innerText = message;
+    }
+
+</script>
+
 </body>
 </html>
