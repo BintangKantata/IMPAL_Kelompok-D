@@ -18,12 +18,18 @@ public class FilmService {
         return repo.findAll();
     }
 
+    public Film findById(Long id) {
+        return repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Film not found"));
+    }
+
     public Film createFilm(Film film) {
         film.setTitle(film.getTitle());
         film.setDescription(film.getDescription());
-        film.setTahun(film.getTahun());
+        film.setImage(film.getImage());
         film.setDuration(film.getDuration());
         film.setGenres(film.getGenres());
+        film.setRu(film.getRu());
 
         return repo.save(film);
     }
@@ -35,8 +41,9 @@ public class FilmService {
         film.setTitle(updated.getTitle());
         film.setGenres(updated.getGenres());
         film.setDuration(updated.getDuration());
-        updated.setTahun(film.getTahun());
+        updated.setImage(film.getImage());
         film.setDescription(updated.getDescription());
+        film.setRu(updated.getRu());
 
         return repo.save(film);
     }
@@ -45,4 +52,3 @@ public class FilmService {
         repo.deleteById(id);
     }
 }
-
