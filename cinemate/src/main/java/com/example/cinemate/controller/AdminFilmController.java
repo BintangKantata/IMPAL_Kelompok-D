@@ -26,6 +26,11 @@ public class AdminFilmController {
         return service.createFilm(film);
     }
 
+    @GetMapping("/{id}")
+    public Film getById(@PathVariable Long id) {
+        return service.findById(id);
+    }
+
     @PutMapping("/{id}")
     public Film update(@PathVariable Long id, @RequestBody Film film) {
         return service.updateFilm(id, film);
