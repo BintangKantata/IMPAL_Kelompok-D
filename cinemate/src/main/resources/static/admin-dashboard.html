@@ -65,14 +65,24 @@
     </div><br>
 
     <div>
-        <label>Year:</label><br>
-        <input type="number" id="tahun" required>
+        <label>Image URL for poster:</label><br>
+        <input type="text" id="image" required>
     </div><br>
 
     <div>
         <label>Description:</label><br>
         <textarea id="description" rows="4" cols="40" required></textarea>
     </div><br>
+
+    <div>
+        <label>Movie Rating:</label><br>
+        <select id="ru" required>
+            <option value="ALL_AGES">All ages</option>
+            <option value="PG13">PG-13</option>
+            <option value="PG17">PG-17</option>
+            <option value="PG21">PG-21</option>
+        </select>
+    </div>
 
     <button type="submit" id="btnSave">Save</button>
     <button type="button" id="btnCancel" style="display:none;">Cancel Edit</button>
@@ -88,8 +98,9 @@
         <th>Title</th>
         <th>Genre</th>
         <th>Duration</th>
-        <th>Year</th>
+        <th>Image URL</th>
         <th>Description</th>
+        <th>Movie Rating</th>
         <th>Actions</th>
     </tr>
     </thead>
@@ -118,10 +129,20 @@
               <td>${film.title}</td>
               <td>${film.genre}</td>
               <td>${film.duration}</td>
-              <td>${film.tahun}</td>
+              <td>${film.image}</td>
               <td>${film.description}</td>
+              <td>${film.ru}</td>
               <td>
-                <button onclick="editFilm(${film.id}, '${film.title}', '${film.genre}', ${film.duration}, ${film.tahun}, \`${film.description}\`)">Edit</button>
+                <button onclick="editFilm(
+                    ${film.id},
+                    '${film.title}',
+                    '${(film.genres || []).join(",")}',
+                    ${film.duration},
+                    '${film.image}',
+                    \`${film.description}\`,
+                    '${film.ru}}'
+                )">Edit</button>
+
                 <button onclick="deleteFilm(${film.id})">Delete</button>
               </td>
             </tr>
@@ -144,9 +165,10 @@
     const filmData = {
         title: document.getElementById("title").value,
         duration: document.getElementById("duration").value,
-        tahun: document.getElementById("tahun").value,
+        image: document.getElementById("image").value,
         description: document.getElementById("description").value,
-        genres: genres
+        genres: genres,
+        ru: document.getElementById("ru").value
     };
 
     try {
@@ -180,12 +202,13 @@
     }
 });
 
-    function editFilm(id, title, genres, duration, tahun, description) {
+    function editFilm(id, title, genres, duration, image, description) {
     document.getElementById("filmId").value = id;
     document.getElementById("title").value = title;
     document.getElementById("duration").value = duration;
-    document.getElementById("tahun").value = tahun;
+    document.getElementById("image").value = image;
     document.getElementById("description").value = description;
+    document.getElementById("ru").value = ru;
 
     // RESET semua checkbox terlebih dahulu
     document.querySelectorAll('#genre-container input[type="checkbox"]').forEach(cb => cb.checked = false);
