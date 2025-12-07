@@ -12,27 +12,80 @@
     .detail-table td {padding:0.5rem 1rem;}
     .btn-order { background: #2365df; color: #fff; border-radius: 0.5rem; padding: 0.7rem 2rem; font-weight: bold; margin-top: 2rem;}
     .btn-order:hover { background: #1747a7;}
+    .detail-info { max-width: 300px; }
+
+    .detail-poster {
+    width: 260px;
+    height: 380px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
   </style>
 </head>
 <body>
-  <header class="flex justify-between items-center px-10 py-5">
-    <div class="flex items-center space-x-3">
-      <img src="https://img.icons8.com/ios-filled/50/ffffff/video-projector.png" class="w-10 h-10"/>
-      <span class="text-white text-2xl font-bold tracking-wide">CINEMATE</span>
+<header class="flex justify-between items-center px-10 py-5">
+  <div class="flex items-center space-x-3">
+    <img src="https://img.icons8.com/ios-filled/50/ffffff/video-projector.png" class="w-10 h-10"/>
+    <span class="text-white text-2xl font-bold tracking-wide">CINEMATE</span>
+  </div>
+  <nav><a href="homepage.html" class="text-white text-lg hover:text-blue-400">Home</a></nav>
+</header>
+
+<main class="flex justify-center items-center py-10 px-4">
+  <div class="detail-card">
+
+    <div class="flex flex-col md:flex-row gap-8">
+
+      <img id="poster" class="detail-poster"
+           src="https://via.placeholder.com/300x450?text=No+Image">
+
+      <div class="flex flex-col justify-start">
+
+        <h1 id="film-title" class="detail-title text-white">Loading...</h1>
+
+        <table class="detail-table">
+          <tr><td>Genre</td><td id="film-genres"></td></tr>
+          <tr><td>Durasi</td><td id="film-duration"></td></tr>
+          <tr><td>Rating Usia</td><td id="film-ru"></td></tr>
+          <tr><td>Sinopsis</td><td id="film-description"></td></tr>
+        </table>
+
+        <button class="btn-order w-fit mt-6"
+                onclick="location.href='booking.html'">
+          Pesan Tiket
+        </button>
+      </div>
+
     </div>
-    <nav><a href="homepage.html" class="text-white text-lg hover:text-blue-400">Home</a></nav>
-  </header>
-  <main class="flex justify-center items-center py-10 px-4">
-    <div class="detail-card">
-      <h1 class="detail-title text-white">Judul Film</h1>
-      <table class="detail-table">
-        <tr><td>Genre</td><td>Action, Drama</td></tr>
-        <tr><td>Durasi</td><td>120 menit</td></tr>
-        <tr><td>Rating</td><td>PG-13</td></tr>
-        <tr><td>Sinopsis</td><td>Lorem ipsum dolor sit amet, film tentang petualangan luar biasa di dunia bioskop.</td></tr>
-      </table>
-      <button class="btn-order" onclick="location.href='booking.html'">Pesan Tiket</button>
-    </div>
-  </main>
+  </div>
+</main>
+
+<script>
+  async function loadFilmDetails() {
+    const params = new URLSearchParams(window.location.search);
+    const filmId = params.get("id");
+    if (!filmId) return;
+
+    try {
+      const res = await fetch(`http://localhost:8080/api/admin/films/${filmId}`);
+      const film = await res.json();
+
+      document.getElementById("film-title").textContent = film.title;
+      document.getElementById("film-genres").textContent = (film.genres || []).join(", ");
+      document.getElementById("film-duration").textContent = film.duration + " menit";
+      document.getElementById("film-ru").textContent = film.ru || "-";
+      document.getElementById("film-description").textContent = film.description;
+
+      document.getElementById("poster").src =
+        film.image && film.image.trim() !== "" ? film.image :
+        "https://via.placeholder.com/300x450?text=No+Image";
+
+    } catch (e) {
+      console.error("Gagal memuat film:", e);
+    }
+  }
+
+  loadFilmDetails();
+</script>
 </body>
 </html>
