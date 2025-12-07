@@ -378,7 +378,36 @@
       showCarousel(0);
       startCarousel();
     };
+
+  async function loadMovies() {
+    try {
+      const response = await fetch("http://localhost:8080/api/admin/films");
+      const movies = await response.json();
+
+      const container = document.querySelector(".movie-grid");
+      container.innerHTML = "";
+
+      movies.forEach(film => {
+        const genres = (film.genres || []).join(", ");
+        const duration = film.duration + "m";
+
+        container.innerHTML += `
+          <div class="movie-card" onclick="location.href='filmdetail.html?id=${film.id}'">
+            <img src="${film.image || 'default-poster.jpg'}" class="movie-poster" alt="${film.title}">
+            <div class="movie-title">${film.title}</div>
+            <div class="movie-meta">${genres} · ${duration}</div>
+          </div>
+        `;
+      });
+
+    } catch (err) {
+      console.error("Gagal load film:", err);
+    }
+  }
+
+  loadMovies();
   </script>
+  
 </head>
 <body>
 <header class="header-nav">
@@ -420,57 +449,8 @@
   </div>
 
   <div class="movie-grid">
-    <div class="movie-card">
-      <img src="https://media.themoviedb.org/t/p/w600_and_h900_bestv2/ef2QSeBkrYhAdfsWGXmp0lvH0T1.jpg" class="movie-poster" alt="Mufasa Poster">
-      <div class="movie-title">Predator: Badlands</div>
-      <div class="movie-meta">Action,Science Fiction,Adventure · 1h 47m</div>
-    </div>
-    <div class="movie-card">
-      <img src="https://media.themoviedb.org/t/p/w600_and_h900_bestv2/oD3Eey4e4Z259XLm3eD3WGcoJAh.jpg" class="movie-poster" alt="Miracle Cell Poster">
-      <div class="movie-title">Now You See Me: Now You Don't</div>
-      <div class="movie-meta">Thriller,Crime,Mystery · 1h 52m</div>
-    </div>
-    <div class="movie-card">
-      <img src="https://media.themoviedb.org/t/p/w600_and_h900_bestv2/r83HIGA0mUiy7I9qVr17pF7SCDP.jpg" class="movie-poster" alt="Spider-Man Poster">
-      <div class="movie-title">Good Fortune</div>
-      <div class="movie-meta">Comedy,Fantasy · 1h 38m</div>
-    </div>
-    <div class="movie-card">
-      <img src="https://media.themoviedb.org/t/p/w600_and_h900_bestv2/xUWUODKPIilQoFUzjHM6wKJkP3Y.jpg" class="movie-poster" alt="Moana 2 Poster">
-      <div class="movie-title">Black Phone 2</div>
-      <div class="movie-meta">Horror,Thriller · 1h 54m</div>
-    </div>
-    <div class="movie-card">
-      <img src="https://www.themoviedb.org/t/p/w600_and_h900_bestv2/bZlDgB1r8N6oQ6QYWqV2qJ0i4Zt.jpg" class="movie-poster" alt="Sonic 3 Poster">
-      <div class="movie-title">SONIC 7</div>
-      <div class="movie-meta">Comedy · 1h 50m</div>
-    </div>
-    <div class="movie-card">
-      <img src="https://www.themoviedb.org/t/p/w600_and_h900_bestv2/2qM3uE3RrFQElZf2wB6uS7t8kPp.jpg" class="movie-poster" alt="John Poster">
-      <div class="movie-title">JOHN</div>
-      <div class="movie-meta">Action/Thriller · 1h 37m</div>
-    </div>
-    <div class="movie-card">
-      <img src="https://www.themoviedb.org/t/p/w600_and_h900_bestv2/8rN95I2WiTqGk6h2c2qA9vE2nQd.jpg" class="movie-poster" alt="Werewolves Poster">
-      <div class="movie-title">WEREWOLVES</div>
-      <div class="movie-meta">Action/Thriller · 1h 33m</div>
-    </div>
-    <div class="movie-card">
-      <img src="https://www.themoviedb.org/t/p/w600_and_h900_bestv2/3Q3kLh3C6h3t3q6g3qG2q3h3g3h.jpg" class="movie-poster" alt="Wicked Poster">
-      <div class="movie-title">WICKED</div>
-      <div class="movie-meta">Fantasy · 2h 40m</div>
-    </div>
-    <div class="movie-card">
-      <img src="https://www.themoviedb.org/t/p/w600_and_h900_bestv2/3m2z1G3N9p8z2g6f7c6h8q9p2g3.jpg" class="movie-poster" alt="Modal Nekad Poster">
-      <div class="movie-title">MODAL NEKAD</div>
-      <div class="movie-meta">Comedy · 1h 47m</div>
-    </div>
-    <div class="movie-card">
-      <img src="https://www.themoviedb.org/t/p/w600_and_h900_bestv2/2qM3uE3RrFQElZf2wB6uS7t8kPp.jpg" class="movie-poster" alt="Surup Poster">
-      <div class="movie-title">SURUP</div>
-      <div class="movie-meta">Horror · 1h 47m</div>
-    </div>
-    <!-- bisa ditambah lagi -->
+    <div class="movie-card" onclick="location.href='filmdetail.html?id=${film.id}'">
+
   </div>
 </main>
 </body>
