@@ -20,9 +20,12 @@ public class Film {
     @Column(name = "genre")
     private Set<Genre> genres;
 
+    @Enumerated(EnumType.STRING)
+    private RatingUsia ru;
+
     private int duration;
 
-    private int tahun;
+    private String image;
 
     @Column(columnDefinition = "TEXT")
     private String description; // deskripsi film
@@ -36,11 +39,14 @@ public class Film {
     public Set<Genre> getGenres() { return genres; }
     public void setGenres(Set<Genre> genres) { this.genres = genres; }
 
+    public RatingUsia getRu(){ return ru;}
+    public void setRu(RatingUsia ru){ this.ru = ru; }
+
     public int getDuration() { return duration; }
     public void setDuration(int duration) { this.duration = duration; }
 
-    public int getTahun() { return tahun; }
-    public void setTahun(int tahun) { this.tahun = tahun; }
+    public String getImage() { return image; }
+    public void setImage(String image) { this.image = image; }
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
