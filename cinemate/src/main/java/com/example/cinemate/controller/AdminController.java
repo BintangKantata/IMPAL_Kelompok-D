@@ -18,9 +18,10 @@ public class AdminController {
 
     @Autowired
     private AdminService adminService;
-    
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AdminLoginRequestDto req) {
+        System.out.println("Login request: " + req.getEmail() + " / " + req.getPassword());
         try {
             Admin admin = adminService.login(req);
 
@@ -38,7 +39,6 @@ public class AdminController {
         }
     }
 
-    // PROFILE ADMIN (setelah login)
     @GetMapping("/profile/{id}")
     public ResponseEntity<?> getProfile(@PathVariable Long id) {
         Admin admin = adminService.getAdminById(id);
