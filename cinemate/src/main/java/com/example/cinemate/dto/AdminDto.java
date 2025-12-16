@@ -10,7 +10,4 @@ public class AdminDto {
     private Long id;
     private String username;
     private String email;
-
-    public long getId() { return id; }
-    public void setId(long id) { this.id = id; }
 }
