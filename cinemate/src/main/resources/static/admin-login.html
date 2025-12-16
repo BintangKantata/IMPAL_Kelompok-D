@@ -1,76 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Admin Login</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin - Login</title>
+  <link href="dist/output.css" rel="stylesheet">
+  <style>
+    body {
+      background: radial-gradient(circle at top left, #0e1a20 0%, #11252d 40%, #0d1418 100%);
+      color: white;
+      font-family: 'Montserrat', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: rgba(12, 24, 28, 0.7);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    .hero-section {
+      padding: 80px 10%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 50px;
+    }
+
+    .hero-section h1 {
+      font-size: 4rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      color: white;
+    }
+
+    .hero-section p {
+      font-size: 1.1rem;
+      color: #b7dce7;
+      max-width: 600px;
+      line-height: 1.6;
+    }
+
+    .category-icon {
+      background: linear-gradient(145deg, #15272f, #1e3640);
+      border-radius: 16px;
+      padding: 15px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+      transition: transform 0.2s;
+    }
+
+    .category-icon:hover {
+      transform: translateY(-5px);
+    }
+
+    footer {
+      background: linear-gradient(to top, #0a1115 95%, transparent);
+      padding: 50px 10%;
+      color: #aaa;
+    }
+
+    .footer-title {
+      color: white;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+    }
+
+    #errorMsg {
+      color: red;
+    }
+  </style>
 </head>
+
 <body>
-
-<h1>Admin Login</h1>
-
-<form id="adminLoginForm">
-  <div>
-    <label for="email">Email:</label><br>
-    <input type="email" id="email" name="email" required>
+<!-- Header -->
+<header class="flex justify-between items-center px-10 py-5">
+  <div class="flex items-center space-x-3">
+    <img src="https://img.icons8.com/ios-filled/50/ffffff/video-projector.png" class="w-10 h-10" alt="Cinemate logo">
+    <span class="text-white text-2xl font-bold tracking-wide">CINEMATE</span>
   </div>
-  <br>
-  <div>
-    <label for="password">Password:</label><br>
-    <input type="password" id="password" name="password" required>
-  </div>
-  <br>
-  <div>
-    <button type="submit" id="btnLogin">Login</button>
-    <button type="button" id="btnBack">Back</button>
-  </div>
-</form>
+</header>
 
-<div id="errorMsg" style="color: red; margin-top: 12px; display: none;"></div>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col md:flex-row items-center justify-center px-4">
+
+  <!-- Right Side: Login Form -->
+  <section class="flex-1 flex justify-center">
+    <div class="bg-[#122936]/90 backdrop-blur-md rounded-2xl shadow-2xl p-8 w-full max-w-md border border-gray-700">
+      <h2 class="text-2xl font-bold mb-2 text-white text-center">Admin Log In</h2>
+      <div class="flex justify-center mb-3">
+        <img src="https://img.icons8.com/ios-filled/50/ffffff/video-projector.png" class="w-12" alt="Cinemate logo">
+      </div>
+      <h3 class="text-lg font-semibold text-center mb-6 text-gray-300">Log Into the Registered Admin Account</h3>
+      <form id="adminLoginForm" class="space-y-4">
+        <div>
+          <label for="email" class="block text-gray-300 font-medium text-sm mb-1">Email</label>
+          <input type="email" id="email" name="email" required
+                 class="w-full px-4 py-2 rounded-lg bg-[#1c3944] text-gray-900 placeholder-gray-400 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
+        </div>
+        <div>
+          <label for="password" class="block text-gray-300 font-medium text-sm mb-1">Password</label>
+          <input type="password" id="password" name="password" required
+                 class="w-full px-4 py-2 rounded-lg bg-[#1c3944] text-gray-900 placeholder-gray-400 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
+        </div>
+        <button type="submit"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition duration-150 shadow-md">
+          Log In
+        </button>
+      </form>
+      <div id="errorMsg" class="text-red-400 mt-3 text-center hidden"></div>
+    </div>
+  </section>
+</main>
+
+<!-- Footer -->
+<footer class="bg-[#0b1a1f]/90 text-gray-300 py-8 px-10 mt-10 border-t border-gray-700">
+  <div class="text-center text-xs mt-8 text-gray-500">
+    © 2025 <span class="text-white font-bold">CINEMATE</span> — All Rights Reserved
+  </div>
+</footer>
 
 <script>
+  // Hash password SHA-256 di browser
+  async function hashPassword(password) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
   document.getElementById('adminLoginForm').addEventListener('submit', async function(e) {
     e.preventDefault();
+
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value;
 
-    // clear previous error
     const errEl = document.getElementById('errorMsg');
     errEl.style.display = 'none';
     errEl.textContent = '';
 
     try {
+      const hashedPassword = await hashPassword(password);
+
       const res = await fetch('http://localhost:8080/api/admin/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password: hashedPassword }) // kirim hash
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        // backend returns { error: "..." } or similar
         const msg = (data && (data.error || data.message)) ? (data.error || data.message) : 'Login failed';
         errEl.textContent = msg;
         errEl.style.display = 'block';
         return;
       }
 
-      // sukses -> simpan dan redirect
       localStorage.setItem('admin', JSON.stringify(data));
-      window.location.href = 'admin-dashboard.html';
+      window.location.href = 'admin-homepage.html';
 
     } catch (err) {
       errEl.textContent = 'Gagal menghubungi server.';
       errEl.style.display = 'block';
     }
   });
-
-  document.getElementById('btnBack').addEventListener('click', function() {
-    // ubah target sesuai halaman utama aplikasi
-    window.location.href = 'homepage.html';
-  });
 </script>
-
 </body>
 </html>
