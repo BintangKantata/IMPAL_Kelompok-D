@@ -10,19 +10,21 @@ import org.springframework.stereotype.Service;
 public class AdminService {
 
     @Autowired
-    private AdminRepository adminRepository;
+    private AdminRepository adminRepo;
 
     public Admin login(AdminLoginRequestDto req) {
-        Admin admin = adminRepository.findByEmail(req.getEmail());
+        Admin admin = adminRepo.findByEmail(req.getEmail())
+                .orElseThrow(() -> new RuntimeException("Email tidak ditemukan"));
 
-        if (admin == null || !admin.getPassword().equals(req.getPassword())) {
-            throw new RuntimeException("Invalid admin email or password");
+        // cek hash password
+        if (!admin.getPassword().equals(req.getPassword())) {
+            throw new RuntimeException("Password salah");
         }
+
         return admin;
     }
 
     public Admin getAdminById(Long id) {
-        return adminRepository.findById(id).orElse(null);
+        return adminRepo.findById(id).orElse(null);
     }
 }
-
