@@ -270,7 +270,6 @@
   </div>
 
 
-  <!-- PROFILE DROPDOWN -->
   <div class="relative inline-block text-left">
     <!-- Tombol Profil -->
     <button id="profileButton" class="focus:outline-none">
@@ -318,20 +317,13 @@
     Masuk sekarang dan mulai petualangan menontonmu.
   </p>
 
-  <div class="flex flex-wrap justify-center gap-20 mt-10">
-    <div class="flex flex-col items-center">
-      <div class="category-icon bg-[#0A2C3E] p-6 rounded-2xl shadow-md hover:bg-[#0E3A52] transition-all">
-        <img src="https://img.icons8.com/fluency/48/film-reel.png" alt="Bioskop">
-      </div>
-      <span class="text-white text-sm font-semibold mt-3">Bioskop</span>
-    </div>
-
+  <div class="flex flex-wrap justify-center mt-10" style="gap: 35px;">
     <a href="movies.html" class="flex flex-col items-center cursor-pointer">
       <div class="flex flex-col items-center">
         <div class="category-icon bg-[#0A2C3E] p-6 rounded-2xl shadow-md hover:bg-[#0E3A52] transition-all">
           <img src="https://img.icons8.com/fluency/48/movie-projector.png" alt="Film">
         </div>
-        <span class="text-white text-sm font-semibold mt-3">Film</span>
+        <span class="text-white text-sm font-semibold mt-3">Films</span>
       </div>
     </a>
 
@@ -344,12 +336,6 @@
       </div>
     </a>
 
-    <div class="flex flex-col items-center">
-      <div class="category-icon bg-[#0A2C3E] p-6 rounded-2xl shadow-md hover:bg-[#0E3A52] transition-all">
-        <img src="https://img.icons8.com/color/48/room.png" alt="Tempat">
-      </div>
-      <span class="text-white text-sm font-semibold mt-3">Sewa Tempat</span>
-    </div>
   </div>
 </section>
 
@@ -419,22 +405,18 @@
   document.addEventListener("DOMContentLoaded", () => {
   const userData = JSON.parse(localStorage.getItem("customer"));
 
-  // Jika user belum login, sembunyikan fitur profil, tapi jangan redirect
   if (!userData) {
     const dropdownName = document.getElementById("dropdownName");
     const profileButton = document.getElementById("profileButton");
     const dropdownMenu = document.getElementById("dropdownMenu");
 
-    // Sembunyikan tombol profil (atau ubah jadi tombol Login)
     if (profileButton) {
       profileButton.innerHTML = `<a href="login.html" class="text-white hover:text-blue-400">Login</a>`;
     }
 
-    // Tidak perlu return — biarkan homepage tetap tampil
     return;
   }
 
-  // Jika user login, tampilkan nama mereka
   let displayName = userData.firstName || userData.nama || "User";
   document.getElementById("dropdownName").textContent = displayName;
 
@@ -442,7 +424,6 @@
   const dropdownMenu = document.getElementById("dropdownMenu");
   const logoutButton = document.getElementById("logoutButton");
 
-  // Toggle dropdown saat tombol diklik
   profileButton.addEventListener("click", (e) => {
   e.stopPropagation();
 
@@ -455,7 +436,6 @@
   }
 });
 
-  // Tutup dropdown saat klik di luar area
   window.addEventListener("click", (e) => {
   if (!profileButton.contains(e.target)) {
     dropdownMenu.classList.remove("show");
@@ -463,23 +443,18 @@
   }
 });
 
-  // Logout
   logoutButton.addEventListener("click", (e) => {
   e.preventDefault();
 
-  // Hapus data user di localStorage / session
   localStorage.removeItem("userData");
   localStorage.removeItem("token");
 
-  // Tutup dropdown dengan animasi
   dropdownMenu.classList.remove("show");
   setTimeout(() => dropdownMenu.classList.add("hidden"), 200);
 
-  // Arahkan ke halaman login (ubah sesuai nama file kamu)
   window.location.href = "login.html";
 });
 
-  // 🔹 Pop-up sambutan SELALU muncul setiap kali halaman dimuat
   const modal = document.getElementById("welcomeModal");
   const box = document.getElementById("welcomeBox");
   const msg = document.getElementById("welcomeMessage");
@@ -488,14 +463,11 @@
   if (modal && box && msg && btn) {
   msg.textContent = `Halo, ${displayName}! Senang bertemu kembali di CINEMATE 🍿`;
 
-  // Tampilkan modal
   modal.classList.add("active");
   setTimeout(() => box.classList.add("show"), 100);
 
-  // Tutup manual (klik OK)
   btn.addEventListener("click", closePopup);
 
-  // Tutup otomatis setelah 3 detik
   setTimeout(closePopup, 3000);
 
   function closePopup() {
