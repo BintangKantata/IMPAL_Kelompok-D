@@ -35,20 +35,20 @@ public class CustomerController {
             return ResponseEntity.ok(dto);
 
         } catch (RuntimeException e) {
-            // Kirim error JSON
             Map<String, String> errorResponse = new HashMap<>();
             errorResponse.put("message", e.getMessage());
-
             return ResponseEntity.badRequest().body(errorResponse);
         }
     }
 
     @PostMapping("/login")
-    public CustomerDto login(@RequestBody CustomerLoginRequestDto req) {
+    public ResponseEntity<?> login(@RequestBody CustomerLoginRequestDto req) {
         Customer customer = customerService.login(req);
 
         if (customer == null) {
-            throw new RuntimeException("Email atau password tidak valid");
+            Map<String, String> err = new HashMap<>();
+            err.put("message", "Email atau password tidak valid");
+            return ResponseEntity.status(400).body(err);
         }
 
         CustomerDto dto = new CustomerDto();
@@ -56,8 +56,6 @@ public class CustomerController {
         dto.setFirstName(customer.getFirstName());
         dto.setLastName(customer.getLastName());
         dto.setEmail(customer.getEmail());
-        dto.setPassword(customer.getPassword());
-
-        return dto;
+        return ResponseEntity.ok(dto);
     }
 }
