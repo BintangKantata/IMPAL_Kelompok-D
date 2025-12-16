@@ -73,7 +73,7 @@
     }
 
     #errorMsg {
-        color: red;
+      color: red;
     }
   </style>
 </head>
@@ -81,7 +81,7 @@
 <body>
   <!-- Header -->
   <header class="flex justify-between items-center px-10 py-5">
-    <div class="flex items-center space-x-3"> 
+    <div class="flex items-center space-x-3">
       <img src="https://img.icons8.com/ios-filled/50/ffffff/video-projector.png" class="w-10 h-10" alt="Cinemate logo">
       <span class="text-white text-2xl font-bold tracking-wide">CINEMATE</span>
     </div>
@@ -89,6 +89,14 @@
 
   <!-- Main Content -->
   <main class="flex-1 flex flex-col md:flex-row items-center justify-center px-4">
+    <!-- Left Side: Welcome -->
+    <section class="flex-1 flex flex-col items-center md:items-start justify-center mb-10 md:mb-0 md:mr-16">
+      <img src="https://img.icons8.com/ios-filled/100/ffffff/video-projector.png" alt="Logo" class="w-20 mb-4">
+      <h1 class="text-4xl md:text-5xl font-extrabold tracking-wide mb-3 text-white">CINEMATE</h1>
+      <p class="max-w-lg text-lg md:text-xl text-gray-200">
+        Selamat datang di <span class="font-bold text-blue-300">CINEMATE!</span> Temukan jadwal film terbaru, pilih kursi favoritmu, dan pesan tiket dengan mudah. Masuk sekarang untuk mulai petualangan menontonmu.
+      </p>
+    </section>
 
     <!-- Right Side: Login Form -->
     <section class="flex-1 flex justify-center">
@@ -118,7 +126,15 @@
             Log In
           </button>
         </form>
-
+        <div class="flex items-center my-5">
+          <hr class="flex-1 border-gray-600">
+          <span class="px-2 text-gray-400 text-sm font-medium">OR</span>
+          <hr class="flex-1 border-gray-600">
+        </div>
+        <button class="w-full flex items-center justify-center bg-[#1c3944] hover:bg-[#224b58] text-blue-300 font-semibold py-2 rounded-lg mb-2 border border-blue-500/50 shadow-sm transition">
+          <img src="https://img.icons8.com/color/24/000000/google-logo.png" class="mr-2" alt="Google logo"/>
+          Continue with Google
+        </button>
         <p class="text-center text-gray-300 mt-3 text-sm">
           Don't have an account yet?
           <a href="register.html" class="text-blue-400 font-semibold hover:underline">Register</a>
@@ -134,44 +150,46 @@
       © 2025 <span class="text-white font-bold">CINEMATE</span> — All Rights Reserved
     </div>
   </footer>
-  
+
   <script>
-  document.getElementById('loginForm').addEventListener('submit', async function(e) {
+    async function hashPassword(password) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(password);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
     e.preventDefault();
 
     const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value.trim();
+    const password = document.getElementById('password').value;
+
+    const errEl = document.getElementById('errorMsg');
+    errEl.textContent = '';
 
     try {
-      const response = await fetch('http://127.0.0.1:8080/api/customer/login', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          email: email, 
-          password: password, 
-        })
-      });
+        const res = await fetch('http://localhost:8080/api/customer/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }) // plain text
+        });
 
-      if (response.ok) {
-      const data = await response.json();
+        const data = await res.json();
 
-      // Simpan data login ke localStorage
-      localStorage.setItem('customer', JSON.stringify(data));
-      localStorage.setItem('hasSelectedInterest', 'false'); // tandai bahwa user belum pilih interest
+        if (!res.ok) {
+            errEl.textContent = data.message || 'Login failed';
+            return;
+        }
 
-      // Arahkan ke halaman interest terlebih dahulu
-      window.location.href = 'homepage.html';
-    } else {
-      document.getElementById('errorMsg').textContent = "Email atau password salah!";
-      document.getElementById('errorMsg').classList.remove('hidden');
+        localStorage.setItem('customer', JSON.stringify(data));
+        window.location.href = 'homepage.html';
+
+    } catch (err) {
+        errEl.textContent = 'Gagal menghubungi server.';
     }
-  } catch (err) {
-    document.getElementById('errorMsg').textContent = "Gagal menghubungi server.";
-    document.getElementById('errorMsg').classList.remove('hidden');
-  }
-  });
+});
   </script>
 
 </body>
