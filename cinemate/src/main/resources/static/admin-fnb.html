@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Admin F&B Management</title>
+
+  <style>
+    body {
+      background: radial-gradient(ellipse at top left, #23343B 0%, #23343B 60%, #26434C 100%);
+      color: white;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0 0 400px 0;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 30px;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      font-size: 32px;
+      font-weight: 700;
+      color: white;
+    }
+
+    p {
+      margin-top: 0;
+      color: #cbd3d6;
+    }
+
+    hr {
+      border: none;
+      border-bottom: 1px solid #2c3a40;
+      margin: 20px 0;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 6px;
+      color: white;
+    }
+
+    select {
+      width: 300px;
+      padding: 10px;
+      background: rgba(255,255,255,0.18);
+      border: 1px solid #2c3a40;
+      color: white;
+      border-radius: 8px;
+    }
+
+    /* CARD TITLE */
+    h2 {
+      margin-top: 25px;
+      font-size: 24px;
+      color: #ffffff;
+    }
+
+    /* TABLE */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: rgba(255,255,255,0.08);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 20px;
+    }
+
+    th {
+      background: rgba(255,255,255,0.16);
+      padding: 12px;
+      text-align: left;
+      color: white;
+      font-size: 14px;
+    }
+
+    td {
+      padding: 12px;
+      border-top: 1px solid #2e3c42;
+      font-size: 14px;
+    }
+
+    input[type="number"] {
+      width: 80px;
+      padding: 8px;
+      background: #11181c;
+      color: white;
+      border: 1px solid #2c3a40;
+      border-radius: 6px;
+    }
+
+    button {
+      background: #2b90ff;
+      border: none;
+      padding: 8px 14px;
+      color: white;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 13px;
+    }
+
+    button:hover {
+      background: #1a78dd;
+    }
+  </style>
+</head>
+
+<body>
+<div class="container">
+
+<h1>Admin - Food & Beverage Management</h1>
+<p>Kelola kuantitas F&B untuk tiap lokasi bioskop.</p>
+
+<hr>
+
+<!-- Dropdown lokasi -->
+<label for="locationSelect">Pilih Lokasi:</label>
+<select id="locationSelect"></select>
+
+<hr>
+
+<h2 id="locationTitle"></h2>
+
+<!-- Table FNB -->
+<table id="fnbTable" border="1" cellpadding="8" cellspacing="0">
+  <thead>
+  <tr>
+    <th>Nama Menu</th>
+    <th>Kategori</th>
+    <th>Kuantitas</th>
+    <th>Aksi</th>
+  </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+
+<script>
+  // ===============================
+  // LOAD LIST LOKASI
+  // ===============================
+  async function loadLocations() {
+      const res = await fetch('/api/admin/locations'); // FIXED
+      const locations = await res.json();
+
+      const select = document.getElementById('locationSelect');
+      select.innerHTML = "";
+
+      locations.forEach(loc => {
+          const opt = document.createElement('option');
+          opt.value = loc.id;
+          opt.textContent = loc.name;
+          select.appendChild(opt);
+      });
+
+      // otomatis load lokasi pertama
+      if (locations.length > 0) {
+          loadFnb(locations[0].id);
+      }
+  }
+
+  // ===============================
+  // LOAD MENU FNB UNTUK LOKASI
+  // ===============================
+  async function loadFnb(locationId) {
+      const res = await fetch(`/api/fnb/${locationId}`);
+      const items = await res.json();
+
+      document.getElementById("locationTitle").textContent =
+          "Daftar Menu F&B untuk Lokasi ID: " + locationId;
+
+      const tbody = document.querySelector('#fnbTable tbody');
+      tbody.innerHTML = "";
+
+      items.forEach(item => {
+          const tr = document.createElement('tr');
+
+          tr.innerHTML = `
+              <td>${item.name}</td>
+              <td>${item.category}</td>
+              <td>
+                  <input type="number" id="qty-${item.id}" value="${item.quantity}" min="0">
+              </td>
+              <td>
+                  <button onclick="updateQuantity(${item.id})">Update</button>
+              </td>
+          `;
+
+          tbody.appendChild(tr);
+      });
+  }
+
+  // ===============================
+  // UPDATE KUANTITAS
+  // ===============================
+  async function updateQuantity(itemId) {
+      const qty = document.getElementById(`qty-${itemId}`).value;
+
+      await fetch(`/api/fnb/${itemId}?quantity=${qty}`, {
+          method: 'PUT'
+      });
+
+      alert("Kuantitas berhasil diperbarui!");
+  }
+
+  // ===============================
+  // EVENT: PILIH LOKASI
+  // ===============================
+  document.getElementById('locationSelect').addEventListener('change', function() {
+      loadFnb(this.value);
+  });
+
+  // ===============================
+  // SAAT PAGE DIBUKA
+  // ===============================
+  loadLocations();
+
+</script>
+</body>
+</html>

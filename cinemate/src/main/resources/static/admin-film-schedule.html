@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Manage Film Schedules</title>
+  <style>
+    body {
+     background: radial-gradient(ellipse at top left, #23343B 0%, #23343B 60%, #26434C 100%);
+      color: white;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0 0 150px 0;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: auto;
+      padding: 30px;
+    }
+
+    h2 {
+      font-size: 28px;
+      margin-bottom: 25px;
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    /* --- CARD INPUT --- */
+    .card {
+      background: rgba(255,255,255,0.10);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+      margin-bottom: 25px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 12px;
+      color: #ffffff;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      background:rgba(255,255,255,0.18);
+      border: 1px solid #2c3a40;
+      color: white;
+      margin-top: 6px;
+    }
+
+	input {
+		width: 98%;
+	}
+
+	input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);  /* 1 = putih, 0 = hitam */
+	}
+
+	input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);  /* 1 = putih, 0 = hitam */
+	}
+
+    button {
+      background: #2b90ff;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 18px;
+      font-weight: bold;
+      color: white;
+      transition: 0.2s;
+    }
+    button:hover {
+      background: #1a78dd;
+    }
+
+    /* --- TABLE --- */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: rgba(255,255,255,0.08);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th {
+      background: rgba(255,255,255,0.16);
+      padding: 12px;
+      text-align: left;
+      color: white;
+      font-size: 14px;
+    }
+
+    td {
+      padding: 12px;
+      border-top: 1px solid #2e3c42;
+      font-size: 14px;
+    }
+
+    .action-btn {
+      background: #37474f;
+      margin-right: 5px;
+      padding: 7px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+    }
+
+    .action-btn:hover {
+      background: #263238;
+    }
+
+    /* --- MODAL STYLING --- */
+    #editModal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(2px);
+      padding-top: 120px;
+    }
+
+    .modal-box {
+      margin: auto;
+      background: #1f2a30;
+      padding: 25px;
+      width: 420px;
+      border-radius: 12px;
+      color: white;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    }
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    #editSave {
+      width: 100%;
+      margin-top: 18px;
+      background: #00b894;
+    }
+
+    #editSave:hover {
+      background: #009b7b;
+    }
+
+    .cancelBtn {
+      width: 100%;
+      margin-top: 10px;
+      background: #b71c1c;
+    }
+
+    .cancelBtn:hover {
+      background: #8b1111;
+    }
+
+    #editError {
+      margin-top: 10px;
+      padding: 8px;
+      background: #b71c1c;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+<h2 id="filmTitle">Film Schedule</h2>
+
+<div>
+  <label>Location:</label>
+  <select id="locationSelect"></select>
+
+  <label>Auditorium:</label>
+  <select id="auditoriumSelect"></select>
+
+  <label>Date:</label>
+  <input type="date" id="dateInput">
+
+  <label>Time:</label>
+  <input type="time" id="timeInput">
+
+  <button id="btnAdd">Add Schedule</button>
+</div>
+
+<table border="1" width="100%">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Location</th>
+    <th>Auditorium</th>
+    <th>Date</th>
+    <th>Time</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody id="scheduleTable"></tbody>
+</table>
+
+<!-- EDIT MODAL -->
+<div id="editModal"
+     style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+            background:rgba(0,0,0,0.5); padding-top:100px;">
+  <div style="margin:auto; background:white; padding:20px; width:400px; border-radius:8px;">
+    <h3>Edit Schedule</h3>
+
+    <label>Location:</label>
+    <select id="editLocation"></select>
+
+    <label>Auditorium:</label>
+    <select id="editAuditorium"></select>
+
+    <label>Date:</label>
+    <input type="date" id="editDate">
+
+    <label>Time:</label>
+    <input type="time" id="editTime">
+
+    <div id="editError" style="display:none;color:red"></div>
+
+    <br><br>
+    <button id="editSave">Save</button>
+    <button onclick="closeEditModal()">Cancel</button>
+  </div>
+</div>
+
+
+<script>
+  let editingId = null;
+
+  const editModal = document.getElementById("editModal");
+  const editLocation = document.getElementById("editLocation");
+  const editAuditorium = document.getElementById("editAuditorium");
+  const editDate = document.getElementById("editDate");
+  const editTime = document.getElementById("editTime");
+
+  const API_BASE = "http://localhost:8080/api/admin";
+
+  const locSelect = document.getElementById("locationSelect");
+  const audSelect = document.getElementById("auditoriumSelect");
+  const dateInput = document.getElementById("dateInput");
+  const timeInput = document.getElementById("timeInput");
+  const scheduleTable = document.getElementById("scheduleTable");
+  const btnAdd = document.getElementById("btnAdd");
+
+  let filmId = null;
+  let locations = [];
+
+  // -------------------------
+  // 1. Ambil filmId dari URL
+  // -------------------------
+  function getFilmId() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("filmId");
+  }
+
+  async function loadFilmTitle() {
+      const res = await fetch(`${API_BASE}/films/${filmId}`);
+      const film = await res.json();
+      document.getElementById("filmTitle").innerText = `Schedule — ${film.title}`;
+  }
+
+  async function loadLocations() {
+      const res = await fetch(`${API_BASE}/locations`);
+      locations = await res.json();
+      locSelect.innerHTML = locations.map(l => `
+          <option value="${l.id}">${l.name}</option>
+      `).join("");
+
+      if (locations.length) {
+        locSelect.value = locations[0].id;
+        loadAuditoriums(locations[0].id);
+      }
+  }
+
+  async function loadAuditoriums(locationId) {
+      const res = await fetch(`${API_BASE}/locations/${locationId}/auditoriums`);
+      const audis = await res.json();
+
+      audSelect.innerHTML = audis
+          .map(a => `<option value="${a.id}">${a.name}</option>`)
+          .join("");
+  }
+
+  locSelect.addEventListener("change", e => {
+      loadAuditoriums(e.target.value);
+  });
+
+  btnAdd.addEventListener("click", async () => {
+      if (!dateInput.value || !timeInput.value)
+          return alert("Please fill all fields");
+
+      const payload = {
+          filmId: Number(filmId),
+          locationId: Number(locSelect.value),
+          auditoriumId: Number(audSelect.value),
+          date: dateInput.value,
+          time: timeInput.value
+      };
+
+      const res = await fetch(`${API_BASE}/schedules`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) {
+          const err = await res.json();
+          return alert(err.error || "Failed to add schedule");
+      }
+
+      loadSchedules();
+  });
+
+  async function loadSchedules() {
+      scheduleTable.innerHTML = "";
+
+      const res = await fetch(`${API_BASE}/films/${filmId}/schedules`);
+      const schedules = await res.json();
+
+      schedules.forEach(s => {
+          scheduleTable.innerHTML += `
+              <tr>
+                  <td>${s.id}</td>
+                  <td>${s.locationName}</td>
+                  <td>${s.auditoriumName}</td>
+                  <td>${s.date}</td>
+                  <td>${s.time}</td>
+                  <td>
+                      <button onclick="editSchedule(${s.id})">Edit</button>
+                      <button onclick="deleteSchedule(${s.id})">Delete</button>
+                  </td>
+              </tr>
+          `;
+      });
+  }
+
+  window.editSchedule = async function(id) {
+    editingId = id;
+
+    // GET detail schedule dulu
+    const res = await fetch(`${API_BASE}/films/${filmId}/schedules`);
+    const schedules = await res.json();
+    const s = schedules.find(sc => sc.id === id);
+
+    // Isi form modal
+    editDate.value = s.date;
+    editTime.value = s.time;
+
+    // Isi location
+    editLocation.innerHTML = locations.map(l =>
+        `<option value="${l.id}" ${l.id === s.locationId ? 'selected' : ''}>${l.name}</option>`
+    ).join("");
+
+    // Load auditorium lokasi itu
+    await loadEditAuditoriums(s.locationId, s.auditoriumId);
+
+    // Tampilkan modal
+    editModal.style.display = "block";
+};
+
+async function loadEditAuditoriums(locationId, selectedAudId) {
+    const res = await fetch(`${API_BASE}/locations/${locationId}/auditoriums`);
+    const auds = await res.json();
+
+    editAuditorium.innerHTML = auds.map(a =>
+        `<option value="${a.id}" ${a.id === selectedAudId ? 'selected' : ''}>${a.name}</option>`
+    ).join("");
+}
+
+async function saveEditSchedule() {
+    const payload = {
+        date: editDate.value,
+        time: editTime.value,
+        locationId: editLocation.value,
+        auditoriumId: editAuditorium.value
+    };
+
+    const res = await fetch(`${API_BASE}/schedules/${editingId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    });
+
+    const errorBox = document.getElementById("editError");
+
+    if (!res.ok) {
+        const errJson = await res.json();
+        errorBox.innerText = errJson.error;
+        errorBox.style.display = "block";
+        return; // tahan modal agar user lihat error
+    }
+
+    errorBox.style.display = "none";
+    editModal.style.display = "none";
+
+    loadSchedules();
+}
+
+editLocation.addEventListener("change", () => {
+    loadEditAuditoriums(Number(editLocation.value), null);
+});
+
+document.getElementById("editSave").onclick = saveEditSchedule;
+
+function closeEditModal() {
+    editModal.style.display = "none";
+}
+
+  window.deleteSchedule = async function(id) {
+      if (!confirm("Delete schedule?")) return;
+
+      await fetch(`${API_BASE}/schedules/${id}`, {
+          method: "DELETE"
+      });
+
+      loadSchedules();
+  };
+
+  (async function init() {
+      filmId = getFilmId();
+      if (!filmId) return alert("filmId missing in URL!");
+
+      await loadFilmTitle();
+      await loadLocations();
+      await loadSchedules();
+  })();
+</script>
+</body>
+</html>

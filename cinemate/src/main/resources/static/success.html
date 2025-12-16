@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Booking Successful</title>
+  <link href="dist/output.css" rel="stylesheet">
+
+  <style>
+    body {
+      background: #111827;
+      color: white;
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .ticket-box {
+      background: #1F2937;
+      padding: 25px;
+      border-radius: 15px;
+      max-width: 600px;
+      margin: 40px auto;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+    .poster {
+      width: 140px;
+      border-radius: 10px;
+      margin-right: 20px;
+    }
+    .row {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+    }
+    .label {
+      opacity: 0.6;
+      margin-top: 6px;
+    }
+    .value {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+    .button-home {
+      margin-top: 25px;
+      padding: 12px;
+      width: 100%;
+      background: #10B981;
+      color: white;
+      font-size: 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      text-align: center;
+    }
+    .button-home:hover {
+      background: #059669;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2 class="text-center text-3xl font-bold mt-4">Payment Successful!</h2>
+
+<div class="ticket-box">
+  <h3 class="text-2xl font-bold mb-4">Your Ticket</h3>
+
+  <div class="row">
+    <img id="filmPoster" class="poster" src="" alt="Film Poster">
+
+    <div>
+      <div class="label">Film</div>
+      <div id="filmTitle" class="value"></div>
+
+      <div class="label">Schedule</div>
+      <div id="scheduleTime" class="value"></div>
+
+      <div class="label">Seats</div>
+      <div id="seatList" class="value"></div>
+
+      <div class="label">Total Paid</div>
+      <div id="totalPaid" class="value font-bold text-green-400"></div>
+
+      <div class="label">Booking ID</div>
+      <div id="bookingIdDisplay" class="value"></div>
+    </div>
+  </div>
+
+  <div class="button-home" onclick="goHome()">Back to Home</div>
+</div>
+
+<script>
+  const API = "/api";
+
+  const scheduleId = Number(localStorage.getItem("scheduleId"));
+  const seats = JSON.parse(localStorage.getItem("selectedSeats") || "[]");
+  const seatTotal = Number(localStorage.getItem("seatTotalPrice") || 0);
+  const fnbTotal = Number(localStorage.getItem("fnbTotalPrice") || 0);
+  const bookingId = localStorage.getItem("lastBookingId");
+
+  // Render booking info
+  document.getElementById("bookingIdDisplay").textContent = bookingId ?? "-";
+  document.getElementById("seatList").textContent = seats.length ? seats.join(", ") : "-";
+  document.getElementById("totalPaid").innerText = "Rp " + (seatTotal + fnbTotal).toLocaleString("id-ID");
+
+  async function loadFilmAndSchedule() {
+    try {
+      // 1. Ambil schedule
+      const schedRes = await fetch(`${API}/schedules/${scheduleId}`);
+      const schedule = await schedRes.json();
+
+      // Tampilkan waktu
+      const time = schedule.date + " " + schedule.time;
+      document.getElementById("scheduleTime").textContent = time;
+
+      // 2. Ambil filmId dari schedule
+      const filmId = schedule.filmId; // <-- pastikan ini sesuai API-mu
+
+      // 3. Ambil detail film
+      const filmRes = await fetch(`${API}/films/${filmId}`);
+      const film = await filmRes.json();
+
+      // Render film info
+      document.getElementById("filmTitle").textContent = film.title;
+      document.getElementById("filmPoster").src =
+        film.image && film.image.trim() !== ""
+          ? film.image
+          : "https://via.placeholder.com/300x450?text=No+Image";
+
+    } catch (err) {
+      console.error("Error loading film/schedule:", err);
+    }
+  }
+
+  loadFilmAndSchedule();
+
+  function goHome() {
+    localStorage.removeItem("selectedSeats");
+    localStorage.removeItem("seatTotalPrice");
+    localStorage.removeItem("scheduleId");
+    localStorage.removeItem("fnbItems");
+    localStorage.removeItem("fnbTotalPrice");
+    window.location.href = "homepage.html";
+  }
+</script>
+
+</body>
+</html>

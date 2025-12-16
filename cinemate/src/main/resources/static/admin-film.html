@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Manage Film Schedules</title>
+
+    <style>
+        body {
+            background: radial-gradient(circle at top left, #0e1a20 0%, #11252d 40%, #0d1418 100%);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0 0 150px 0;
+        }
+
+        .page {
+            max-width: 700px;  /* lebih compact */
+            margin: auto;
+            padding: 30px;
+        }
+
+        h2 {
+            font-size: 28px;
+            margin-bottom: 25px;
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        /* --- CARD INPUT --- */
+        .card {
+            background: rgba(255,255,255,0.10);
+            padding: 25px;
+            border-radius: 1.5rem;
+            box-shadow: 0 0 15px rgba(0,0,0,0.4);
+            margin-bottom: 30px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 12px;
+            color: #ffffff;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 0.6rem;
+            background: rgba(255,255,255,0.18);
+            border: 1px solid #2c3a40;
+            color: #fff;  /* tetap putih tapi kita atur placeholder */
+            margin-top: 6px;
+            font-size: 1rem;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        input::placeholder,
+        select option {
+            color: #667478;
+            opacity: 1;
+        }
+
+        #description {
+            color: #fff;          /* teks yang diketik */
+            font-family: sans-serif; /* font teks */
+        }
+
+        /* placeholder */
+        #description::placeholder {
+            color: #667478;
+            font-family: sans-serif;
+        }
+
+
+        input[type="date"]::-webkit-calendar-picker-indicator,
+        input[type="time"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+        }
+
+        /* Tombol */
+        button {
+            background: #2365df;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 0.6rem;
+            cursor: pointer;
+            margin-top: 18px;
+            font-weight: bold;
+            color: white;
+            transition: 0.2s;
+            font-size: 1rem;
+        }
+        button:hover {
+            background: #1747a7;
+        }
+
+        /* Container grid */
+        #genre-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 6px;
+        }
+
+        /* Sembunyikan checkbox asli */
+        #genre-container input[type="checkbox"] {
+            display: none;
+        }
+
+        /* Label sebagai button */
+        #genre-container label {
+            display: inline-block;
+            padding: 8px 15px;
+            border-radius: 0.6rem;
+            background: rgba(255,255,255,0.18);
+            cursor: pointer;
+            color: white;
+            font-weight: 600;
+            transition: 0.2s;
+            user-select: none;
+        }
+
+        /* Hover effect */
+        #genre-container label:hover {
+            background: rgba(255,255,255,0.28);
+        }
+
+        /* Checked effect: genre dipilih */
+        #genre-container input[type="checkbox"]:checked + label {
+            background: #2365df; /* biru Cinemate */
+            color: white;
+            font-weight: 700;
+        }
+
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255,255,255,0.08);
+            border-radius: 0.8rem;
+            overflow: hidden;
+        }
+
+        th {
+            background: rgba(255,255,255,0.16);
+            padding: 12px;
+            text-align: left;
+            color: white;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 12px;
+            border-top: 1px solid #2e3c42;
+            font-size: 14px;
+        }
+
+        .action-btn {
+            background: #37474f;
+            margin-right: 5px;
+            padding: 7px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+        }
+
+        .action-btn:hover {
+            background: #263238;
+        }
+
+        /* Responsive: form container */
+        @media screen and (max-width: 768px) {
+            .page {
+                padding: 15px;
+            }
+            input, select, textarea {
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="page">
+
+    <h2 id="formTitle">Add New Film</h2>
+
+    <form id="filmForm" class="card">
+        <input type="hidden" id="filmId">
+
+        <div>
+            <label>Title:</label>
+            <input type="text" id="title" placeholder="Enter film title" required>
+        </div>
+
+        <div>
+            <label>Genre:</label>
+            <div id="genre-container">
+                <input type="checkbox" id="genre-horror" value="HORROR">
+                <label for="genre-horror">Horror</label>
+                <input type="checkbox" id="genre-action" value="ACTION">
+                <label for="genre-action">Action</label>
+                <input type="checkbox" id="genre-comedy" value="COMEDY">
+                <label for="genre-comedy">Comedy</label>
+                <input type="checkbox" id="genre-thriller" value="THRILLER">
+                <label for="genre-thriller">Thriller</label>
+
+                <input type="checkbox" id="genre-fantasy" value="FANTASY">
+                <label for="genre-fantasy">Fantasy</label>
+
+                <input type="checkbox" id="genre-drama" value="DRAMA">
+                <label for="genre-drama">Drama</label>
+
+                <input type="checkbox" id="genre-biography" value="BIOGRAPHY">
+                <label for="genre-biography">Biography</label>
+
+                <input type="checkbox" id="genre-family" value="FAMILY">
+                <label for="genre-family">Family</label>
+
+                <input type="checkbox" id="genre-historical" value="HISTORICAL">
+                <label for="genre-historical">Historical</label>
+
+                <input type="checkbox" id="genre-crime" value="CRIME">
+                <label for="genre-crime">Crime</label>
+
+                <input type="checkbox" id="genre-superhero" value="SUPERHERO">
+                <label for="genre-superhero">Superhero</label>
+
+                <input type="checkbox" id="genre-psychological" value="PSYCHOLOGICAL">
+                <label for="genre-psychological">Psychological</label>
+
+                <input type="checkbox" id="genre-cyberpunk" value="CYBERPUNK">
+                <label for="genre-cyberpunk">Cyberpunk</label>
+
+                <input type="checkbox" id="genre-steampunk" value="STEAMPUNK">
+                <label for="genre-steampunk">Steampunk</label>
+
+                <input type="checkbox" id="genre-anthology" value="ANTHOLOGY">
+                <label for="genre-anthology">Anthology</label>
+
+                <input type="checkbox" id="genre-zombie" value="ZOMBIE">
+                <label for="genre-zombie">Zombie</label>
+
+                <input type="checkbox" id="genre-art" value="ART">
+                <label for="genre-art">Art</label>
+
+                <input type="checkbox" id="genre-politicial" value="POLITICIAL">
+                <label for="genre-politicial">Political</label>
+
+                <input type="checkbox" id="genre-military" value="MILITARY">
+                <label for="genre-military">Military</label>
+
+                <input type="checkbox" id="genre-survival" value="SURVIVAL">
+                <label for="genre-survival">Survival</label>
+
+                <input type="checkbox" id="genre-space" value="SPACE">
+                <label for="genre-space">Space</label>
+
+                <input type="checkbox" id="genre-disaster" value="DISASTER">
+                <label for="genre-disaster">Disaster</label>
+
+                <input type="checkbox" id="genre-school" value="SCHOOL">
+                <label for="genre-school">School</label>
+
+                <input type="checkbox" id="genre-wildlife" value="WILDLIFE">
+                <label for="genre-wildlife">Wildlife</label>
+
+                <input type="checkbox" id="genre-animals" value="ANIMALS">
+                <label for="genre-animals">Animals</label>
+
+                <input type="checkbox" id="genre-futuristic" value="FUTURISTIC">
+                <label for="genre-futuristic">Futuristic</label>
+            </div>
+        </div>
+
+        <div>
+            <label>Duration (minutes):</label>
+            <input type="number" id="duration" placeholder="e.g. 120" required>
+        </div>
+
+        <div>
+            <label>Image URL for poster:</label>
+            <input type="text" id="image" placeholder="https://example.com/poster.jpg" required>
+        </div>
+
+        <div>
+            <label>Description:</label>
+            <textarea id="description" rows="4"
+                      placeholder="Enter film description..."
+                      required>
+    </textarea>
+        </div>
+
+        <div>
+            <label>Movie Rating:</label>
+            <select id="ru" required>
+                <option value="ALL_AGES">All ages</option>
+                <option value="PG13">PG-13</option>
+                <option value="PG17">PG-17</option>
+                <option value="PG21">PG-21</option>
+            </select>
+        </div>
+
+        <button type="submit" id="btnSave">Save</button>
+        <button type="button" id="btnCancel" style="display:none;">Cancel Edit</button>
+    </form>
+
+</div>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Genre</th>
+        <th>Duration</th>
+        <th>Image</th>
+        <th>Description</th>
+        <th>Rating</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody id="filmTableBody">
+    <!-- rows akan diisi JS -->
+    </tbody>
+</table>
+
+
+<script>
+    const API_URL = "http://localhost:8080/api/admin/films";
+
+    document.addEventListener("DOMContentLoaded", loadFilms);
+
+    async function loadFilms() {
+      try {
+        const res = await fetch(API_URL);
+        const films = await res.json();
+
+        const tbody = document.getElementById("filmTableBody");
+        tbody.innerHTML = "";
+
+        films.forEach(film => {
+          tbody.innerHTML += `
+            <tr>
+              <td>${film.id}</td>
+              <td>${film.title}</td>
+              <td>${film.genre}</td>
+              <td>${film.duration}</td>
+              <td>${film.image}</td>
+              <td>${film.description}</td>
+              <td>${film.ru}</td>
+              <td>
+                <button onclick="editFilm(
+                    ${film.id},
+                    '${film.title}',
+                    '${(film.genres || []).join(",")}',
+                    ${film.duration},
+                    '${film.image}',
+                    \`${film.description}\`,
+                    '${film.ru}}'
+                )">Edit</button>
+
+                <button onclick="deleteFilm(${film.id})">Delete</button>
+                <button onclick="window.location.href='admin-film-schedule.html?filmId=${film.id}'">Schedule</button>
+
+              </td>
+            </tr>
+          `;
+        });
+
+      } catch (err) {
+        showError("Failed to load films");
+      }
+    }
+
+    document.getElementById("filmForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const id = document.getElementById("filmId").value;
+
+    const checkboxes = document.querySelectorAll('#genre-container input[type="checkbox"]:checked');
+    const genres = Array.from(checkboxes).map(cb => cb.value);
+
+    const filmData = {
+        title: document.getElementById("title").value,
+        duration: document.getElementById("duration").value,
+        image: document.getElementById("image").value,
+        description: document.getElementById("description").value,
+        genres: genres,
+        ru: document.getElementById("ru").value
+    };
+
+    try {
+        let response;
+
+        if (id === "") {
+            response = await fetch(API_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(filmData)
+            });
+        } else {
+            response = await fetch(`${API_URL}/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(filmData)
+            });
+        }
+
+        if (!response.ok) {
+            showError("Failed to save film");
+            return;
+        }
+
+        resetForm();
+        loadFilms();
+
+    } catch (err) {
+        showError("Server error");
+        console.error(err);
+    }
+});
+
+    function editFilm(id, title, genres, duration, image, description) {
+    document.getElementById("filmId").value = id;
+    document.getElementById("title").value = title;
+    document.getElementById("duration").value = duration;
+    document.getElementById("image").value = image;
+    document.getElementById("description").value = description;
+    document.getElementById("ru").value = ru;
+
+    // RESET semua checkbox terlebih dahulu
+    document.querySelectorAll('#genre-container input[type="checkbox"]').forEach(cb => cb.checked = false);
+
+    // CENTANG GENRE YANG DIMILIKI FILM
+    genres.forEach(g => {
+        const checkbox = document.querySelector(`#genre-container input[value="${g}"]`);
+        if (checkbox) checkbox.checked = true;
+    });
+
+    // TAMPILKAN UI EDIT
+    document.getElementById("formTitle").innerText = "Edit Film";
+    document.getElementById("btnCancel").style.display = "inline";
+}
+
+    document.getElementById("btnCancel").addEventListener("click", resetForm);
+
+    function resetForm() {
+      document.getElementById("filmForm").reset();
+      document.getElementById("filmId").value = "";
+      document.getElementById("formTitle").innerText = "Add New Film";
+      document.getElementById("btnCancel").style.display = "none";
+      document.getElementById("message").innerText = "";
+    }
+
+    async function deleteFilm(id) {
+      if (!confirm("Delete this film?")) return;
+
+      try {
+        const res = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+
+        if (!res.ok) {
+          showError("Failed to delete film");
+          return;
+        }
+
+        loadFilms();
+      } catch (err) {
+        showError("Server error");
+      }
+    }
+
+    function showError(message) {
+      document.getElementById("message").innerText = message;
+    }
+
+</script>
+
+</body>
+</html>

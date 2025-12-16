@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment</title>
+    <style>
+        body {
+            background: radial-gradient(circle at top left, #0e1a20 0%, #11252d 40%, #0d1418 100%);
+            color: #fff;
+            font-family: 'Montserrat', Arial, sans-serif;
+            min-height: 100vh;
+            padding: 2 rem
+        }
+
+        .container {
+            background: rgba(0,0,0,0.15);
+              border-radius: 1.5rem;
+              padding: 2rem;
+              max-width: 500px;
+              margin: auto;
+              margin-top: 40px;
+              box-shadow: 0 4px 32px 0 rgba(0,0,0,0.10);
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            font-weight: 800;
+            margin-bottom: .5rem;
+            color: #fff;
+        }
+
+        .total-box {
+            padding: 1rem;
+            background: rgba(255,255,255,0.15);
+            border-radius: 1rem;
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-top: 1rem;
+        }
+
+        /* Button utama - sama tipe dengan "Update Profil" */
+        .btn {
+            width: 100%;
+            border: none;
+            background: #2365df;
+            padding: 0.9rem;
+            font-size: 1.1rem;
+            color: white;
+            border-radius: 0.6rem;
+            cursor: pointer;
+            font-weight: 700;
+            margin-top: 1.5rem;
+        }
+
+        .btn:hover {
+            background: #1747a7;
+        }
+
+        /* Modal overlay */
+        #payModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Modal box → seragam dengan profile-card style */
+        .modal-content {
+            background: rgba(255,255,255,0.10);
+            padding: 2rem;
+            border-radius: 1.5rem;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+        }
+
+        .modal-content h3 {
+            font-size: 1.4rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-content p {
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            opacity: 0.85;
+        }
+
+        /* Modal buttons → sama style tombol biru profile.html */
+        .modal-btn {
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            border: none;
+            cursor: pointer;
+            border-radius: 0.6rem;
+            font-size: 1rem;
+            width: 100%;
+            font-weight: 700;
+        }
+
+        .yes-btn {
+            background: #2365df;
+            color: white;
+        }
+
+        .yes-btn:hover {
+            background: #1747a7;
+        }
+
+        .no-btn {
+            background: rgba(255,255,255,0.20);
+            color: white;
+        }
+
+        .no-btn:hover {
+            background: rgba(255,255,255,0.30);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Payment</h2>
+
+    <!-- SUMMARY -->
+    <div class="section">
+        <h3>Your Seats</h3>
+        <div id="seatList">Loading...</div>
+        <div id="seatPrice"></div>
+    </div>
+
+    <div class="section">
+        <h3>Food & Beverages</h3>
+        <div id="fnbList">Loading...</div>
+        <div id="fnbPrice"></div>
+    </div>
+
+    <div class="total-box" id="totalDisplay">Total: Rp 0</div>
+
+    <button class="btn" onclick="openPayModal()">Pay Now</button>
+</div>
+
+<!-- MODAL -->
+<div id="payModal">
+    <div class="modal-content">
+        <h3>Confirm Payment?</h3>
+        <p>After payment, booking and F&B purchase will be finalized.</p>
+
+        <button class="modal-btn yes-btn" onclick="processPayment()">Yes, Pay</button>
+        <button class="modal-btn no-btn" onclick="closePayModal()">Cancel</button>
+    </div>
+</div>
+
+<script type="module">
+    // ==== GLOBAL VAR ====
+    let scheduleId, seats, seatTotal, fnbItems, fnbTotal, locationId, customerId;
+
+    // ==== MODAL FUNC ====
+    function openPayModal() {
+        document.getElementById("payModal").style.display = "flex";
+    }
+
+    function closePayModal() {
+        document.getElementById("payModal").style.display = "none";
+    }
+
+    // ==== MAIN INIT ====
+    async function main() {
+        const params = new URLSearchParams(window.location.search);
+
+        // Ambil scheduleId dari URL atau localStorage
+        scheduleId = Number(params.get("scheduleId") || localStorage.getItem("scheduleId"));
+        if (!scheduleId) {
+            alert("Schedule tidak ditemukan.");
+            window.location.href = "homepage.html";
+            return;
+        }
+
+        // Ambil data dari localStorage
+        seats = JSON.parse(localStorage.getItem("selectedSeats") || "[]");
+        seatTotal = Number(localStorage.getItem("seatTotalPrice") || 0);
+        fnbItems = JSON.parse(localStorage.getItem("fnbItems") || "[]");
+        fnbTotal = Number(localStorage.getItem("fnbTotalPrice") || 0);
+        locationId = Number(localStorage.getItem("selectedLocationId") || 1);
+        customerId = Number(localStorage.getItem("customerId"));
+
+        // ====== LOAD FNB NAMES ======
+        let fnbMap = {}; // itemId -> name
+        try {
+            const res = await fetch(`/api/fnb/${locationId}`);
+            const data = await res.json();
+            data.forEach(item => fnbMap[item.id] = item.name);
+        } catch (err) {
+            console.error("Gagal memuat F&B:", err);
+        }
+
+        // ====== RENDER SUMMARY ======
+        const seatListEl = document.getElementById("seatList");
+        const seatPriceEl = document.getElementById("seatPrice");
+        const fnbListEl = document.getElementById("fnbList");
+        const fnbPriceEl = document.getElementById("fnbPrice");
+        const totalDisplayEl = document.getElementById("totalDisplay");
+
+        seatListEl.innerText = seats.length ? seats.join(", ") : "-";
+        seatPriceEl.innerText = "Seat Price: Rp " + seatTotal.toLocaleString("id-ID");
+
+        if (fnbItems.length === 0) {
+            fnbListEl.innerText = "-";
+        } else {
+            fnbListEl.innerHTML = fnbItems
+                .map(i => {
+                    const id = i.itemId || i.id;
+                    const name = fnbMap[id] || `Item ${id}`;
+                    return `${name} × ${i.quantity}`;
+                })
+                .join("<br>");
+        }
+
+        fnbPriceEl.innerText = "F&B Price: Rp " + fnbTotal.toLocaleString("id-ID");
+
+        const grand = seatTotal + fnbTotal;
+        totalDisplayEl.innerText = "Total: Rp " + grand.toLocaleString("id-ID");
+    }
+
+    // ==== PAYMENT FUNC ====
+    async function processPayment() {
+        if (!scheduleId) {
+            alert("Schedule ID tidak ditemukan!");
+            return;
+        }
+
+        // 1. BOOK SEATS
+        const res = await fetch(`/api/schedules/${scheduleId}/book`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                customerId: customerId,
+                seats: seats,
+                totalPrice: seatTotal
+            })
+        });
+
+        const result = await res.json();
+
+        // SIMPAN ke localStorage untuk success.html
+        localStorage.setItem("lastBookingId", result.bookingId);
+        localStorage.setItem("scheduleId", scheduleId);
+        localStorage.setItem("selectedSeats", JSON.stringify(seats));
+        localStorage.setItem("seatTotalPrice", seatTotal);
+        localStorage.setItem("fnbTotalPrice", fnbTotal);
+
+        // 2. PURCHASE FNB (optional)
+        if (fnbItems.length > 0) {
+            await fetch("/api/fnb/purchase", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    locationId: locationId,
+                    items: fnbItems
+                })
+            });
+        }
+
+        alert("Payment Successful!");
+
+        // cleanup
+        localStorage.removeItem("fnbItems");
+
+        window.location.href = "success.html";
+    }
+
+    // ==== ATTACH FUNC KE WINDOW ====
+    window.openPayModal = openPayModal;
+    window.closePayModal = closePayModal;
+    window.processPayment = processPayment;
+
+    main();
+</script>
+
+</body>
+</html>
