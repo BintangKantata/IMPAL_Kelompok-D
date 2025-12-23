@@ -1,41 +1,342 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Profil Pengguna - Cinemate</title>
-  <link href="dist/output.css" rel="stylesheet">
+
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+
   <style>
-    body { background: radial-gradient(ellipse at top left, #23343B 0%, #23343B 60%, #26434C 100%); color: #fff; font-family: 'Montserrat', Arial, sans-serif; min-height: 100vh;}
-    .profile-card { background: rgba(255,255,255,0.10); border-radius: 1.5rem; padding: 2.5rem; max-width: 420px; margin: auto;}
-    .profile-title { font-size:2rem; font-weight:900; margin-bottom:1rem;}
-    .profile-card label { font-weight: bold; display: block; margin-bottom:0.2rem;}
-    .profile-card input { width: 100%; padding: 0.6rem; border-radius: 0.5rem; margin-bottom: 1rem; border: none;}
-    .btn { background: #2365df; color: #fff; border-radius: 0.5rem; padding: 0.7rem 0; font-weight: bold; width: 100%; margin-top: 1rem;}
-    .btn:hover { background: #1747a7;}
+    :root{
+      --card-bg: rgba(255,255,255,0.08);
+      --input-bg: rgba(0,0,0,0.25);
+      --accent: #2365df;
+      --accent-600: #1747a7;
+      --muted: rgba(255,255,255,0.7);
+      --glass-border: rgba(255,255,255,0.06);
+    }
+
+    /* Background tetap sama seperti permintaan */
+    html,body{
+      height:100%;
+      margin:0;
+      font-family: 'Montserrat', Arial, sans-serif;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+    body {
+      background: radial-gradient(ellipse at top left, #0e1a20 0%, #11252d 40%, #0d1418 100%);
+      color: #fff;
+      min-height: 100vh;
+      display:flex;
+      flex-direction:column;
+    }
+
+    header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:20px 40px;
+      gap:12px;
+    }
+    .brand {
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .brand img { width:40px; height:40px; opacity:0.95; }
+    .brand .title { font-weight:800; letter-spacing:1px; font-size:20px; color:#fff; }
+
+    nav a {
+      color: #cfe8ff;
+      text-decoration:none;
+      font-weight:600;
+    }
+    nav a:hover { color: var(--accent); }
+
+    main {
+      flex:1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:40px 20px;
+    }
+
+    .profile-wrapper{
+      width:100%;
+      max-width:980px;
+      display:grid;
+      grid-template-columns: 320px 1fr;
+      gap:28px;
+      align-items:start;
+    }
+
+    /* Kartu profil kiri (avatar + ringkasan) */
+    .profile-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.03));
+      border-radius:18px;
+      padding:28px;
+      border:1px solid var(--glass-border);
+      box-shadow: 0 6px 20px rgba(2,6,12,0.5);
+    }
+    .avatar {
+      width:100%;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:14px;
+    }
+    .avatar .photo {
+      width:120px;
+      height:120px;
+      border-radius:999px;
+      background: linear-gradient(135deg,#22334a,#163a6b);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:40px;
+      font-weight:800;
+      color: #fff;
+      border: 3px solid rgba(255,255,255,0.06);
+    }
+    .avatar h2 { margin:0; font-size:20px; font-weight:800; color:#fff; }
+    .avatar p { margin:0; color:var(--muted); font-size:14px; }
+
+    .card-stats {
+      display:flex;
+      gap:8px;
+      margin-top:10px;
+      width:100%;
+      justify-content:space-between;
+    }
+    .card-stat {
+      flex:1;
+      background: rgba(255,255,255,0.03);
+      border-radius:10px;
+      padding:10px;
+      text-align:center;
+      border:1px solid rgba(255,255,255,0.02);
+    }
+    .card-stat strong { display:block; color:#fff; font-size:16px; }
+    .card-stat span { color:var(--muted); font-size:12px; }
+
+    /* Form kanan */
+    .form-card {
+      background: var(--card-bg);
+      border-radius:18px;
+      padding:28px;
+      border:1px solid var(--glass-border);
+      box-shadow: 0 6px 20px rgba(2,6,12,0.45);
+    }
+    .form-header {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-bottom:20px;
+    }
+    .form-header h1 { margin:0; font-size:22px; font-weight:800; color:#fff; }
+    .form-header p { margin:0; color:var(--muted); font-size:13px; }
+
+    form .field {
+      margin-bottom:14px;
+    }
+    form label {
+      display:block;
+      font-size:13px;
+      font-weight:600;
+      margin-bottom:8px;
+      color:var(--muted);
+    }
+
+    /* Input styling: pastikan teks selalu terlihat */
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    select,
+    textarea {
+      width:100%;
+      padding:12px 14px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,0.06);
+      background: var(--input-bg);
+      color:#fff;                 /* teks terlihat putih */
+      caret-color: var(--accent); /* kursor warna accent */
+      font-size:15px;
+      outline: none;
+      transition: box-shadow .12s, transform .08s, border-color .12s;
+    }
+
+    /* Placeholder harus berbeda agar terlihat saat belum diketik */
+    ::placeholder { color: rgba(255,255,255,0.6); }
+    input:focus, textarea:focus, select:focus {
+      box-shadow: 0 6px 18px rgba(35,101,223,0.12);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    /* small helper text */
+    .help { font-size:12px; color:rgba(255,255,255,0.6); margin-top:6px; }
+
+    .inline {
+      display:flex;
+      gap:12px;
+    }
+    .inline .col { flex:1; }
+
+    .actions {
+      display:flex;
+      gap:12px;
+      margin-top:18px;
+    }
+
+    .btn {
+      display:inline-block;
+      text-align:center;
+      padding:12px 18px;
+      border-radius:10px;
+      font-weight:700;
+      cursor:pointer;
+      border:none;
+    }
+
+    .btn-save {
+      background: linear-gradient(180deg,var(--accent), var(--accent-600));
+      color:#fff;
+      flex:1;
+    }
+    .btn-cancel {
+      background:transparent;
+      color:var(--muted);
+      border:1px solid rgba(255,255,255,0.04);
+      flex:1;
+    }
+
+    /* responsive */
+    @media (max-width:880px) {
+      .profile-wrapper { grid-template-columns: 1fr; padding:0 8px; }
+      .avatar .photo { width:100px; height:100px; font-size:34px; }
+    }
   </style>
 </head>
 <body>
-  <header class="flex justify-between items-center px-10 py-5">
-    <div class="flex items-center space-x-3">
-      <img src="https://img.icons8.com/ios-filled/50/ffffff/video-projector.png" class="w-10 h-10"/>
-      <span class="text-white text-2xl font-bold tracking-wide">CINEMATE</span>
+  <header>
+    <div class="brand">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/video-projector.png" alt="logo"/>
+      <span class="title">CINEMATE</span>
     </div>
-    <nav><a href="homepage.html" class="text-black text-lg hover:text-blue-400">Home</a></nav>
+    <nav>
+      <a href="homepage.html">Home</a>
+    </nav>
   </header>
-  <main class="flex justify-center items-center py-10 px-4">
-    <div class="profile-card">
-      <h1 class="profile-title text-white mb-3">Profil Pengguna</h1>
-      <form>
-        <label for="nama">Nama</label>
-        <input type="text" id="nama" value="Nama User"/>
-        <label for="email">Email</label>
-        <input type="email" id="email" value="user@email.com"/>
-        <label for="phone">Nomor Telepon</label>
-        <input type="tel" id="phone" value="08123456789"/>
-        <button type="submit" class="btn">Update Profil</button>
-      </form>
+
+  <main>
+    <div class="profile-wrapper">
+      <!-- kiri: ringkasan -->
+      <section class="profile-card" aria-label="Ringkasan Profil">
+        <div class="avatar">
+          <div class="photo" aria-hidden="true">U</div>
+          <div style="text-align:center">
+            <h2 id="display-name">Nama User</h2>
+            <p id="display-email">user@email.com</p>
+          </div>
+
+          <div class="card-stats" aria-hidden="true">
+            <div class="card-stat">
+              <strong>2</strong>
+              <span>Booking</span>
+            </div>
+            <div class="card-stat">
+              <strong>5</strong>
+              <span>FNB</span>
+            </div>
+            <div class="card-stat">
+              <strong>Member</strong>
+              <span>Status</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- kanan: form -->
+      <section class="form-card" aria-label="Form Profil">
+        <div class="form-header">
+          <div>
+            <h1>Profil Pengguna</h1>
+            <p>Perbarui data pribadi Anda di sini</p>
+          </div>
+          <div style="color:var(--muted);font-size:13px">ID: <strong style="color:#fff">#12345</strong></div>
+        </div>
+
+        <form id="profileForm" onsubmit="return handleSave(event)">
+          <div class="field">
+            <label for="nama">Nama lengkap</label>
+            <input id="nama" name="nama" type="text" placeholder="Masukkan nama lengkap" value="Nama User" required />
+          </div>
+
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" placeholder="contoh@domain.com" value="user@email.com" required />
+            <div class="help">Gunakan email yang aktif untuk notifikasi.</div>
+          </div>
+
+          <div class="field inline">
+            <div class="col">
+              <label for="phone">Nomor Telepon</label>
+              <input id="phone" name="phone" type="tel" placeholder="08xxxxxxxxxx" value="08123456789" />
+            </div>
+            <div class="col">
+              <label for="birth">Tanggal Lahir</label>
+              <input id="birth" name="birth" type="text" placeholder="DD/MM/YYYY" value="01/01/1990" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="bio">Tentang saya</label>
+            <textarea id="bio" name="bio" rows="4" placeholder="Ceritakan sedikit tentang diri Anda..." style="resize:vertical;background:var(--input-bg);border:1px solid rgba(255,255,255,0.06);color:#fff;padding:12px;border-radius:10px;">Saya suka nonton film...</textarea>
+            <div class="help">Opsional — maksimum 300 karakter.</div>
+          </div>
+
+          <div class="actions">
+            <button type="button" class="btn btn-cancel" onclick="handleCancel()">Batal</button>
+            <button type="submit" class="btn btn-save">Simpan Perubahan</button>
+          </div>
+        </form>
+      </section>
     </div>
   </main>
+
+  <script>
+    // Demo: update ringkasan di sebelah kiri saat user mengetik
+    const nameInput = document.getElementById('nama');
+    const emailInput = document.getElementById('email');
+    const phoneInput = document.getElementById('phone');
+
+    const displayName = document.getElementById('display-name');
+    const displayEmail = document.getElementById('display-email');
+
+    nameInput.addEventListener('input', () => displayName.textContent = nameInput.value || 'Nama User' );
+    emailInput.addEventListener('input', () => displayEmail.textContent = emailInput.value || 'user@email.com' );
+
+    function handleSave(e){
+      e.preventDefault();
+      // TODO: panggil API untuk menyimpan profil (fetch / axios)
+      const data = {
+        name: nameInput.value,
+        email: emailInput.value,
+        phone: phoneInput.value,
+        bio: document.getElementById('bio').value
+      };
+      // untuk demo, tampilkan notifikasi sederhana
+      alert('Profil tersimpan (demo):\\n' + JSON.stringify(data, null, 2));
+      return false;
+    }
+    function handleCancel(){
+      // Reset ke nilai default (atau bisa reload dari server)
+      if(confirm('Batalkan perubahan?')) location.reload();
+    }
+  </script>
 </body>
 </html>
