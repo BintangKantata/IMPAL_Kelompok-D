@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pesan Makanan & Minuman - Cinemate</title>
+  <title>Food & Beverage- Cinemate</title>
   <link href="dist/output.css" rel="stylesheet">
   <style>
     body {
@@ -24,7 +24,7 @@
       font-size: 1.35rem;
       font-weight: 800;
       color: #fff;
-      background: #2365df;
+      background: #5AC3E7;
       border-radius: 0.7rem 0.7rem 0 0;
       padding: 0.7rem 1.7rem;
       display: flex;
@@ -136,8 +136,8 @@
       font-weight: 800;
     }
     .checkout-btn {
-      background: #2365df;
-      color: #fff;
+      background: #5AC3E7;
+      color: #0d0d0d;
       font-size: 1.2rem;
       font-weight: bold;
       border-radius: 1rem;
@@ -148,7 +148,7 @@
       transition: background 0.2s;
     }
     .checkout-btn:hover {
-      background: #1747a7;
+      background: #5AC3E7;
       color: #fff;
     }
     @media(max-width:900px){
@@ -163,120 +163,134 @@
     }
   </style>
   <script>
+    let fnbData = [];   // data dari backend
+    let cartQty = [];  // qty yang dipilih user
 
-  const fnbMeta = {
-    "Burger":        { price: 30000, category: "Food", imgUrl: "img/burger.png" },
-    "Hotdog":        { price: 25000, category: "Food", imgUrl: "img/hotdog.png" },
-    "Fried Chicken": { price: 28000, category: "Food", imgUrl: "img/chicken.png" },
-    "Rice Bowl":     { price: 32000, category: "Food", imgUrl: "img/ricebowl.png" },
-
-    "Cola":          { price: 15000, category: "Drink", imgUrl: "img/cola.png" },
-    "Mineral Water": { price: 10000, category: "Drink", imgUrl: "img/water.png" },
-    "Milk Tea":      { price: 18000, category: "Drink", imgUrl: "img/milktea.png" },
-    "Orange Juice":  { price: 20000, category: "Drink", imgUrl: "img/juice.png" },
-
-    "Popcorn":       { price: 25000, category: "Snack", imgUrl: "img/popcorn.png" },
-    "Nachos":        { price: 22000, category: "Snack", imgUrl: "img/nachos.png" },
-    "French Fries":  { price: 20000, category: "Snack", imgUrl: "img/fries.png" },
-    "Potato Wedges": { price: 23000, category: "Snack", imgUrl: "img/wedges.png" }
-  };
-
-    let fnbData = [];     // Data dari backend
-    let cartQty = [];     // Qty user beli
-
+    /* ===============================
+       LOAD FNB DARI BACKEND
+    =============================== */
     async function loadFnb() {
-      // Ambil locationId dari localStorage (misal diset dari kursi/film sebelumnya)
       const locationId = localStorage.getItem("selectedLocationId") || 1;
 
-      const res = await fetch(`/api/fnb/${locationId}`);
+      const res = await fetch(`/api/fnb/location/${locationId}`);
       fnbData = await res.json();
-      console.log("FNB DATA:", fnbData);
 
-      // Inisialisasi qty keranjang
+      // hanya tampilkan yang stok > 0
+      fnbData = fnbData.filter(item => item.quantity > 0);
+
       cartQty = Array(fnbData.length).fill(0);
 
       renderMenu();
     }
 
+    /* ===============================
+       RENDER MENU
+    =============================== */
     function renderMenu() {
-  const menuGrid = document.getElementById('menuGrid');
-  menuGrid.innerHTML = '';
+      const menuGrid = document.getElementById("menuGrid");
+      menuGrid.innerHTML = "";
 
-  fnbData.forEach((item, idx) => {
+      fnbData.forEach((item, idx) => {
+        menuGrid.innerHTML += `
+          <div class="food-item">
+            <div class="food-type">${item.type}</div>
 
-    // MAPPING ke harga/kategori/gambar
-    const meta = fnbMeta[item.name] || { price: 0, category: "-", imgUrl: "" };
+            <img
+              src="${item.imageUrl || getImageByType(item.type)}"
+              class="food-img"
+              onerror="this.src='${getImageByType(item.type)}'"
+            />
 
-    menuGrid.innerHTML += `
-      <div class="food-item">
-        <div class="food-type">${meta.category}</div>
+            <div class="food-name">${item.name}</div>
+            <div class="food-price">
+              Rp ${item.price.toLocaleString("id-ID")},00
+            </div>
 
-        <img src="${meta.imgUrl || 'https://img.icons8.com/color/96/popcorn.png'}"
-             class="food-img"/>
+            <div class="food-action">
+              <button class="qty-btn" onclick="changeQty(${idx}, -1)">-</button>
+              <span class="qty-num" id="qty${idx}">0</span>
+              <button class="qty-btn" onclick="changeQty(${idx}, 1)">+</button>
+            </div>
+          </div>
+        `;
+      });
 
-        <div class="food-name">${item.name}</div>
-        <div class="food-price">Rp ${meta.price.toLocaleString('id-ID')},00</div>
-
-        <div class="food-action">
-          <button class="qty-btn" onclick="changeQty(${idx}, -1)">-</button>
-          <span class="qty-num" id="qty${idx}">${cartQty[idx]}</span>
-          <button class="qty-btn" onclick="changeQty(${idx}, 1)">+</button>
-        </div>
-      </div>
-    `;
-  });
-
-  updateTotal();
-}
-
-    // 3. Ubah jumlah item
-    function changeQty(idx, add) {
-      cartQty[idx] += add;
-      if (cartQty[idx] < 0) cartQty[idx] = 0;
-
-      document.getElementById('qty' + idx).innerText = cartQty[idx];
       updateTotal();
     }
 
-    // 4. Hitung Total Harga
-    function updateTotal() {
-      let total = 0;
-      cartQty.forEach((qty, i) => {
-        const meta = fnbMeta[fnbData[i].name] || { price: 0 };
-        total += qty * meta.price;
-    });
-
-    document.getElementById('totalValue').innerText =
-      'Rp ' + total.toLocaleString('id-ID') + ',00';
+    /* ===============================
+       IMAGE HELPER
+    =============================== */
+    function getImageByType(type) {
+      switch (type) {
+        case "COMBO":
+          return "img/burger.png";
+        case "DRINK":
+          return "img/cola.png";
+        case "SNACK":
+          return "img/popcorn.png";
+        default:
+          return "https://img.icons8.com/color/96/restaurant-menu.png";
+      }
     }
 
-    // 5. Checkout → Kurangi stok di database
+    /* ===============================
+       CHANGE QTY
+    =============================== */
+    function changeQty(idx, add) {
+      cartQty[idx] += add;
+
+      if (cartQty[idx] < 0) cartQty[idx] = 0;
+      if (cartQty[idx] > fnbData[idx].quantity) {
+        cartQty[idx] = fnbData[idx].quantity;
+      }
+
+      document.getElementById("qty" + idx).innerText = cartQty[idx];
+      updateTotal();
+    }
+
+    /* ===============================
+       UPDATE TOTAL
+    =============================== */
+    function updateTotal() {
+      let total = 0;
+
+      cartQty.forEach((qty, i) => {
+        total += qty * fnbData[i].price;
+      });
+
+      document.getElementById("totalValue").innerText =
+        "Rp " + total.toLocaleString("id-ID") + ",00";
+    }
+
+    /* ===============================
+       CHECKOUT
+    =============================== */
     async function checkout() {
+      const purchaseList = [];
+      let total = 0;
 
-    const locationId = localStorage.getItem("selectedLocationId") || 1;
-
-    const purchaseList = [];
-    let total = 0;
-
-    cartQty.forEach((qty, i) => {
+      cartQty.forEach((qty, i) => {
         if (qty > 0) {
-            const meta = fnbMeta[fnbData[i].name] || { price: 0 };
+          purchaseList.push({
+            itemId: fnbData[i].id,
+            quantity: qty
+          });
 
-            purchaseList.push({
-                itemId: fnbData[i].id,
-                quantity: qty
-            });
-
-            total += qty * meta.price;
+          total += qty * fnbData[i].price;
         }
-    });
+      });
 
-    // SAVE to localStorage
-    localStorage.setItem("fnbItems", JSON.stringify(purchaseList));
-    localStorage.setItem("fnbTotalPrice", total);
+      if (!purchaseList.length) {
+        alert("Pilih minimal 1 item F&B");
+        return;
+      }
 
-    window.location.href = "payment.html";
-}
+      localStorage.setItem("fnbItems", JSON.stringify(purchaseList));
+      localStorage.setItem("fnbTotalPrice", total);
+
+      window.location.href = "payment.html";
+    }
 
     window.onload = loadFnb;
   </script>
