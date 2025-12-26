@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Daftar Film - Cinemate</title>
+  <title>Film Page - Cinemate</title>
   <link href="dist/output.css" rel="stylesheet">
   <style>
     body {
@@ -127,7 +127,7 @@
     }
     .carousel-btn {
       background: #5AC3E7;
-      color: #0F1D22;
+      color: #0d0d0d;
       font-size: 1rem;
       font-weight: bold;
       border-radius: 0.8rem;
@@ -141,7 +141,7 @@
       display: inline-block;
     }
     .carousel-btn:hover {
-      background: #36A7CE;
+      background: #5AC3E7;
       color: #fff;
     }
     .carousel-dots {
@@ -165,7 +165,7 @@
     }
     .carousel-dot.active {
       opacity: 1;
-      background: #36A7CE;
+      background: #5AC3E7;
     }
     @media(max-width:1200px){
       .carousel-section, .carousel, .carousel-slide, .carousel-img-bg{height:32vw;max-height:32vw;}
@@ -190,7 +190,7 @@
     }
 
     /* Filter Buttons */
-    .movie-filters {
+    .genreFilter {
       display: flex;
       align-items: center;
       gap: 1rem;
@@ -198,7 +198,7 @@
     }
     .filter-btn {
       background: #5AC3E7;
-      color: #0F1D22;
+      color: #020617;
       font-weight: 600;
       border-radius: 0.7rem;
       font-size: 1rem;
@@ -206,10 +206,12 @@
       border: none;
       cursor: pointer;
       transition: background 0.2s, color 0.2s;
+      margin-left: 41px;
+      margin-bottom: 12px;
     }
     .filter-btn:hover,
     .filter-btn.active {
-      background: #36A7CE;
+      background: #5AC3E7;
       color: #fff;
     }
 
@@ -217,152 +219,200 @@
     .movie-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: 2rem 1.3rem;
+      gap: 40px;
       padding: 0 2.5rem 2rem;
     }
-    .movie-card {
-      background: rgba(255,255,255,0.09);
-      backdrop-filter: blur(4px);
-      border-radius: 1.1rem;
-      overflow: hidden;
-      box-shadow: 0 4px 25px rgba(0,0,0,0.45);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      transition: transform 0.2s, box-shadow 0.2s;
-      cursor: pointer;
-      min-width: 150px;
+    .movie-item {
+      width: 180px;
     }
+
+    .movie-card {
+      width: 100%;
+      aspect-ratio: 2 / 3;
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
     .movie-card:hover {
       transform: translateY(-6px);
       box-shadow: 0 8px 35px rgba(0,0,0,0.55);
     }
+
     .movie-poster {
       width: 100%;
-      height: 230px;
+      height: 100%;
       object-fit: cover;
-      border-radius: 1rem 1rem 0 0;
-      background: #1e2b32;
-      margin-bottom: 0.6rem;
+      display: block;
     }
+
+    .movie-info {
+      margin-top: 8px;
+      text-align: left;
+    }
+
     .movie-title {
-      font-size: 1.05rem;
-      font-weight: 700;
+      font-size: 1rem;
+      font-weight: 500;
+      text-align: left;
       color: #fff;
-      margin-bottom: 0.25rem;
-      text-align: center;
       line-height: 1.2;
-      padding: 0 0.5rem;
+      margin-bottom: 0.4rem;
     }
-    .movie-meta {
-      font-size: 0.94rem;
-      color: #5AC3E7;
-      font-weight: 600;
-      text-align: center;
-      margin-bottom: 0.6rem;
-      line-height: 1.2;
+
+    .movie-title-link {
+      text-decoration: none;
+    }
+
+    .movie-tags {
+      display: flex;
+      justify-content: flex-start;
+      gap: 0.55rem;
+      font-size: 0.85rem;
+      color: #ccc;
+    }
+
+    .movie-tag {
+      background: rgba(255,255,255,0.08);
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      font-weight: 400;
+      white-space: nowrap;
+    }
+
+    .rating-g {
+      background: #22c55e;   /* hijau */
+      color: #fff;
+      font-weight: 400;
+    }
+
+    .rating-pg13 {
+      background: #facc15;   /* kuning */
+      color: #1f2937;
+      font-weight: 400;
+    }
+
+    .rating-pg17 {
+      background: #f97316;   /* oranye */
+      color: #fff;
+      font-weight: 400;
+    }
+
+    .rating-pg21 {
+      background: #ef4444;   /* merah */
+      color: #fff;
+      font-weight: 400;
+    }
+
+    .rating-unknown {
+      background: #64748b;   /* abu */
+      color: #fff;
+    }
+
+
+    .section-title {
+      margin-left: 41px;
+      margin-bottom: 12px;
+    }
+
+    .search-wrapper {
+      position: relative;
     }
 
     .search-bar {
-      padding: 0.5rem 1.3rem;
+      padding: 0.6rem 1.2rem 0.6rem 3rem;
       border-radius: 999px;
       border: none;
       font-size: 1rem;
       color: #0F1D22;
       background: #fff;
-      width: 210px;
+      width: 320px; /* LEBAR */
     }
+
+    .search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      color: #777;
+      pointer-events: none;
+    }
+
   </style>
 
   <script>
-    const carouselMovies = [
-      {
-        title: "THE CONJURING: LAST RITES",
-        meta: "Horror/Thriller · 2h 15m",
-        desc: "Penyelidik paranormal Ed dan Lorraine Warren menghadapi satu kasus terakhir yang mengerikan, melibatkan entitas misterius yang harus mereka hadapi.",
-        bg: "https://wallpapercave.com/wp/wp15744319.jpg",
-        poster: "https://media.themoviedb.org/t/p/w300_and_h450_bestv2/7JzOmJ1fIU43I3gLHYsY8UzNzjG.jpg"
-      },
-      {
-        title: "TRON: ARES",
-        meta: "Sci-Fi/Action · 1h 59m",
-        desc: "Sebuah program canggih bernama Ares dikirim dari dunia digital ke dunia nyata dalam sebuah misi berbahaya, menandai pertemuan pertama umat manusia dengan makhluk kecerdasan buatan (A.I.).",
-        bg: "https://wallpapercave.com/wp/wp15265122.jpg",
-        poster: "https://media.themoviedb.org/t/p/w300_and_h450_bestv2/chpWmskl3aKm1aTZqUHRCtviwPy.jpg"
-      },
-      {
-        title: "JEMBATAN SHIRATAL MUSTAQIM",
-        meta: "Horror · 1h 36m",
-        desc: "Setelah bencana tsunami dan munculnya rumor tentang penggelapan dana bantuan, Arya sering diteror oleh penglihatan tentang sebuah tempat yang diyakini sebagai Jembatan Shiratal Mustaqim — jembatan akhirat yang menghubungkan ke surga dan membentang di atas neraka.",
-        bg: "https://cdn.medcom.id/dynamic/content/2025/10/08/1782683/1T6BIxASwu.jpg?w=1024",
-        poster: "https://media.themoviedb.org/t/p/w300_and_h450_bestv2/pvmnrIov0uKlPmcrABOaCa7ucud.jpg"
-      },
-      {
-        title: "Wed or Wait",
-        meta: "Comedy/Drama/Romance · 1h 48m",
-        desc: "Niken menghadapi tekanan dari keluarganya untuk menikah meskipun ia sendiri tidak menginginkannya. Dengan mantan tunangan dan pacarnya saat ini sama-sama mendesaknya untuk menikah, Niken bergulat dengan pertanyaan penting: menikah atau tidak menikah? Dan yang lebih penting lagi, dengan siapa?",
-        bg: "https://wallpapers.com/images/hd/sonic-3-movie-cover-7y6h7v1f7b7h7v1f.jpg",
-        poster: "https://media.themoviedb.org/t/p/w300_and_h450_bestv2/jSOwR3phJ0L9USxziFfNxReiZ5R.jpg"
-      },
-      {
-        title: "WICKED",
-        meta: "Fantasy · 2h 40m",
-        desc: "Enter the magical world of Wicked. A fantasy musical that unveils the untold story of the witches of Oz.",
-        bg: "https://images.hdqwalls.com/wallpapers/wicked-movie-2024-4k-dr.jpg",
-        poster: "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/3Q3kLh3C6h3t3q6g3qG2q3h3g3h.jpg"
-      }
-    ];
+    window.API = window.API || "http://localhost:8080/api";
     let carouselIndex = 0;
     let carouselTimer;
+    let carouselMovies = [];
+    let allMovies = [];
+    let filmScheduleMap = {};
+    let activeStatus = "NOW";
 
-    function showCarousel(idx) {
-      const slides = document.querySelectorAll('.carousel-slide');
-      const dots = document.querySelectorAll('.carousel-dot');
-      slides.forEach((slide, i) => {
-        slide.classList.remove('active');
-        dots[i].classList.remove('active');
-        if (i === idx) {
-          slide.classList.add('active');
-          dots[i].classList.add('active');
-        }
-      });
-      carouselIndex = idx;
-    }
+  function showCarousel(idx) {
+    const slides = document.querySelectorAll('.carousel-slide');
+    const dots = document.querySelectorAll('.carousel-dot');
 
-    function nextCarousel() {
-      carouselIndex = (carouselIndex + 1) % carouselMovies.length;
-      showCarousel(carouselIndex);
-    }
+    slides.forEach((slide, i) => {
+      slide.classList.toggle('active', i === idx);
+      dots[i].classList.toggle('active', i === idx);
+    });
 
-    function startCarousel() {
-      carouselTimer = setInterval(nextCarousel, 3400);
-    }
+    carouselIndex = idx;
+  }
 
-    function stopCarousel() {
-      clearInterval(carouselTimer);
-    }
+  function nextCarousel() {
+    carouselIndex = (carouselIndex + 1) % carouselMovies.length;
+    showCarousel(carouselIndex);
+  }
 
-    window.onload = function() {
+  function startCarousel() {
+    carouselTimer = setInterval(nextCarousel, 3400);
+  }
+
+  function stopCarousel() {
+    clearInterval(carouselTimer);
+  }
+
+  async function loadCarousel() {
+    try {
+      const res = await fetch("http://localhost:8080/api/admin/films");
+      const movies = await res.json();
+
+      // ambil 5 film pertama (atau sesuai kebutuhan)
+      carouselMovies = movies.slice(0, 5);
+
       const carousel = document.getElementById('carousel');
       const dots = document.getElementById('carousel-dots');
 
-      carouselMovies.forEach((movie, i) => {
+      carousel.innerHTML = "";
+      dots.innerHTML = "";
+
+      carouselMovies.forEach((film, i) => {
+        const genres = (film.genres || []).join("/");
+        const duration = film.duration + "m";
+
         const slide = document.createElement('div');
-        slide.className = 'carousel-slide';
-        if (i === 0) slide.classList.add('active');
+        slide.className = 'carousel-slide' + (i === 0 ? ' active' : '');
 
         slide.innerHTML = `
-          <div class="carousel-img-bg" style="background-image:url('${movie.bg}');"></div>
+          <div class="carousel-img-bg"
+               style="background-image:url('${film.bannerImage || film.image}')"></div>
           <div class="carousel-content">
-            <img src="${movie.poster}" class="carousel-poster" alt="${movie.title} Poster"/>
+            <img src="${film.image}" class="carousel-poster" alt="${film.title}">
             <div class="carousel-text">
-              <div class="carousel-title">${movie.title}</div>
-              <div class="carousel-meta">${movie.meta}</div>
-              <div>${movie.desc}</div>
-              <a href="filmdetail.html" class="carousel-btn">Show Detail</a>
+              <div class="carousel-title">${film.title}</div>
+              <div class="carousel-meta">${genres} · ${duration}</div>
+              <div>${film.description || ""}</div>
+              <a href="filmdetail.html?id=${film.id}" class="carousel-btn">
+                Show Detail
+              </a>
             </div>
           </div>
         `;
+
         carousel.appendChild(slide);
 
         const dot = document.createElement('span');
@@ -372,40 +422,291 @@
           stopCarousel();
           startCarousel();
         };
+
         dots.appendChild(dot);
       });
 
       showCarousel(0);
       startCarousel();
-    };
-
-  async function loadMovies() {
-    try {
-      const response = await fetch("http://localhost:8080/api/admin/films");
-      const movies = await response.json();
-
-      const container = document.querySelector(".movie-grid");
-      container.innerHTML = "";
-
-      movies.forEach(film => {
-        const genres = (film.genres || []).join(", ");
-        const duration = film.duration + "m";
-
-        container.innerHTML += `
-          <div class="movie-card" onclick="location.href='filmdetail.html?id=${film.id}'">
-            <img src="${film.image || 'default-poster.jpg'}" class="movie-poster" alt="${film.title}">
-            <div class="movie-title">${film.title}</div>
-            <div class="movie-meta">${genres} · ${duration}</div>
-          </div>
-        `;
-      });
 
     } catch (err) {
-      console.error("Gagal load film:", err);
+      console.error("Gagal load carousel:", err);
     }
   }
 
-  loadMovies();
+  async function loadMovies() {
+    try {
+      const filmRes = await fetch("http://localhost:8080/api/admin/films");
+
+      if (!filmRes.ok) {
+        throw new Error("Gagal mengambil film");
+      }
+
+      allMovies = await filmRes.json();
+      filmScheduleMap = {};
+
+      // cek schedule per film (SESUI CONTROLLER)
+      await Promise.all(
+        allMovies.map(async film => {
+          try {
+            const res = await fetch(
+              `http://localhost:8080/api/admin/films/${film.id}/schedules`
+            );
+            const schedules = await res.json();
+            filmScheduleMap[film.id] =
+              Array.isArray(schedules) && schedules.length > 0;
+          } catch {
+            filmScheduleMap[film.id] = false;
+          }
+        })
+      );
+
+      applyFilters();
+
+    } catch (err) {
+      console.error("Gagal load film:", err);
+
+      const container = document.querySelector(".movie-grid");
+      if (container) {
+        container.innerHTML = `
+          <p style="color:#aaa;text-align:center;">
+            Gagal memuat film
+          </p>
+        `;
+      }
+    }
+  }
+
+  function renderMovies(movies) {
+    const grid = document.querySelector(".movie-grid");
+    grid.innerHTML = "";
+
+    if (!movies.length) {
+      grid.innerHTML = `<p style="color:#aaa;text-align:center;">No movies found</p>`;
+      return;
+    }
+
+    movies.forEach(film => {
+      const duration = formatDuration(film.duration);
+      const rating = film.ru || "-";
+      const poster = film.image || "default-poster.jpg";
+
+     grid.innerHTML += `
+        <div class="movie-item">
+
+          <!-- CARD POSTER -->
+          <div class="movie-card" onclick="location.href='filmdetail.html?id=${film.id}'">
+            <img
+              src="${poster}"
+              class="movie-poster"
+              alt="${film.title}"
+            >
+          </div>
+
+          <!-- INFO DI BAWAH CARD -->
+          <div class="movie-info">
+            <a class="movie-title-link">
+              <h4 class="movie-title line-clamp-2">
+                ${film.title}
+              </h4>
+            </a>
+
+            <div class="movie-tags">
+              <p class="movie-tag">2D</p>
+              <p class="movie-tag rating-tag ${getRatingClass(rating)}">${rating}</p>
+              <p class="movie-tag">${duration}</p>
+            </div>
+          </div>
+
+        </div>
+      `;
+    });
+  }
+
+  function formatDuration(min) {
+    const h = Math.floor(min / 60);
+    const m = min % 60;
+    return h ? `${h}h ${m}m` : `${m}m`;
+  }
+
+
+
+  function filmHasSchedule(filmId) {
+    return filmScheduleMap[filmId] === true;
+  }
+
+
+  function applyFilters() {
+    const selectedGenre = document.getElementById("genreFilter")?.value || "";
+    const selectedAge = document.getElementById("ageFilter")?.value || "";
+    const keyword =
+      document.getElementById("searchInput")?.value.toLowerCase() || "";
+
+    let filtered = [...allMovies];
+
+    // NOW SHOWING / UPCOMING
+    filtered = filtered.filter(film => {
+      const hasSchedule = filmHasSchedule(film.id);
+      return activeStatus === "NOW"
+        ? hasSchedule
+        : !hasSchedule;
+    });
+
+    // genre
+    if (selectedGenre) {
+      filtered = filtered.filter(film =>
+        film.genres?.includes(selectedGenre)
+      );
+    }
+
+    // rating usia
+    if (selectedAge) {
+      filtered = filtered.filter(film =>
+        film.ru === selectedAge
+      );
+    }
+
+    // search
+    if (keyword) {
+      filtered = filtered.filter(film =>
+        film.title.toLowerCase().includes(keyword)
+      );
+    }
+
+    renderMovies(filtered);
+  }
+
+
+
+  async function loadRecommendations() {
+    const customerId = localStorage.getItem("customerId");
+    if (!customerId) return;
+
+    try {
+      const bookingRes = await fetch(`${API}/bookings/customers/${customerId}`);
+      const bookings = await bookingRes.json();
+
+      if (!Array.isArray(bookings) || bookings.length === 0) return;
+
+      const filmRes = await fetch(`${API}/admin/films`);
+      const films = await filmRes.json();
+
+      const watchedTitles = bookings.map(b => b.filmTitle);
+      const preferredGenres = new Set();
+
+      films.forEach(film => {
+        if (watchedTitles.includes(film.title)) {
+          (film.genres || []).forEach(g => preferredGenres.add(g));
+        }
+      });
+
+      if (preferredGenres.size === 0) return;
+
+      const recommendedFilms = films.filter(film =>
+        !watchedTitles.includes(film.title) &&
+        film.genres?.some(g => preferredGenres.has(g))
+      );
+
+      if (recommendedFilms.length === 0) return;
+
+      renderRecommendations(recommendedFilms);
+
+      console.log("Bookings:", bookings);
+      console.log("Preferred genres:", [...preferredGenres]);
+
+    } catch (err) {
+      console.error("Gagal load rekomendasi:", err);
+    }
+  }
+
+  function renderRecommendations(films) {
+    const section = document.getElementById("recommendation-section");
+    const grid = document.getElementById("recommendationGrid");
+
+    section.style.display = "block";
+    grid.innerHTML = "";
+
+    films.slice(0, 6).forEach(film => {
+      const duration = formatDuration(film.duration);
+      const rating = film.ru || "-";
+      const poster = film.image || "default-poster.jpg";
+
+      grid.innerHTML += `
+        <div class="movie-item">
+
+          <div class="movie-card"
+               onclick="location.href='filmdetail.html?id=${film.id}'">
+            <img
+              src="${poster}"
+              class="movie-poster"
+              alt="${film.title}">
+          </div>
+
+          <div class="movie-info">
+            <h4 class="movie-title line-clamp-2">
+              ${film.title}
+            </h4>
+
+            <div class="movie-tags">
+              <p class="movie-tag">2D</p>
+              <p class="movie-tag rating-tag ${getRatingClass(rating)}">
+                ${rating}
+              </p>
+              <p class="movie-tag">${duration}</p>
+            </div>
+          </div>
+
+        </div>
+      `;
+    });
+  }
+
+  function getRatingClass(rating) {
+  switch (rating) {
+    case "G":
+      return "rating-g";
+    case "PG13":
+      return "rating-pg13";
+    case "PG17":
+      return "rating-pg17";
+    case "PG21":
+      return "rating-pg21";
+    default:
+      return "rating-unknown";
+  }
+}
+
+
+
+  window.onload = function () {
+    loadCarousel();
+    loadMovies();
+    loadRecommendations();
+
+    document.getElementById("genreFilter")
+      .addEventListener("change", applyFilters);
+
+    document.getElementById("ageFilter")
+      .addEventListener("change", applyFilters);
+
+    document.getElementById("searchInput")
+      ?.addEventListener("input", applyFilters);
+
+    document.querySelectorAll(".filter-btn[data-status]")
+    .forEach(btn => {
+      btn.addEventListener("click", () => {
+
+        document.querySelectorAll(".filter-btn[data-status]")
+          .forEach(b => b.classList.remove("active"));
+
+        btn.classList.add("active");
+        activeStatus = btn.dataset.status;
+
+        applyFilters();
+      });
+    });
+  };
+
   </script>
 
 </head>
@@ -413,12 +714,22 @@
 <header class="header-nav">
   <a href="homepage.html" class="no-underline">
     <div class="flex items-center space-x-3">
-      <img src="https://img.icons8.com/ios-filled/50/ffffff/video-projector.png" class="w-10 h-10" alt="Logo Cinemate">
-      <span class="text-white text-2xl font-bold tracking-wide">CINEMATE</span>
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/video-projector.png"
+           class="w-10 h-10"
+           alt="Logo Cinemate">
+      <span class="text-white text-2xl font-bold tracking-wide">
+        CINEMATE
+      </span>
     </div>
   </a>
+
   <nav class="flex items-center space-x-6">
-    <input type="text" class="search-bar" placeholder="Search movies" />
+    <input
+            type="text"
+            id="searchInput"
+            class="search-bar"
+            placeholder="Search movies"
+    />
   </nav>
 </header>
 
@@ -429,29 +740,65 @@
   </div>
 
   <div class="movie-filters">
-    <button class="filter-btn active">Now Showing</button>
-    <button class="filter-btn">Upcoming</button>
-    <select class="filter-btn" style="min-width:110px;">
-      <option>None</option>
-      <option>Action</option>
-      <option>Drama</option>
-      <option>Comedy</option>
-      <option>Animation</option>
-      <option>Horror</option>
-      <option>Romance</option>
+    <button class="filter-btn active" data-status="NOW">
+      Now Showing
+    </button>
+    <button class="filter-btn" data-status="UPCOMING">
+      Upcoming
+    </button>
+
+    <select id="genreFilter" class="filter-btn" style="min-width:140px;">
+      <option value="">None</option>
+      <option value="ACTION">Action</option>
+      <option value="ADVENTURE">Adventure</option>
+      <option value="ANIMALS">Animals</option>
+      <option value="ANIMATION">Animation</option>
+      <option value="ANTHOLOGY">Anthology</option>
+      <option value="ART">Art</option>
+      <option value="BIOGRAPHY">Biography</option>
+      <option value="COMEDY">Comedy</option>
+      <option value="CRIME">Crime</option>
+      <option value="CYBERPUNK">Cyberpunk</option>
+      <option value="DISASTER">Disaster</option>
+      <option value="DOCUMENTARY">Documentary</option>
+      <option value="DRAMA">Drama</option>
+      <option value="FAMILY">Family</option>
+      <option value="FANTASY">Fantasy</option>
+      <option value="FUTURISTIC">Futuristic</option>
+      <option value="HISTORICAL">Historical</option>
+      <option value="HORROR">Horror</option>
+      <option value="MILITARY">Military</option>
+      <option value="POLITICAL">Political</option>
+      <option value="PSYCHOLOGICAL">Psychological</option>
+      <option value="ROMANCE">Romance</option>
+      <option value="SCHOOL">School</option>
+      <option value="SCIENCE_FICTION">Science Fiction</option>
+      <option value="SPACE">Space</option>
+      <option value="STEAMPUNK">Steampunk</option>
+      <option value="SUPERHERO">Superhero</option>
+      <option value="SURVIVAL">Survival</option>
+      <option value="THRILLER">Thriller</option>
+      <option value="WILDLIFE">Wildlife</option>
+      <option value="ZOMBIE">Zombie</option>
     </select>
-    <select class="filter-btn" style="min-width:110px;">
-      <option>None</option>
-      <option>&lt; 1h 30m</option>
-      <option>1h 30m - 2h</option>
-      <option>&gt; 2h</option>
+
+    <select id="ageFilter" class="filter-btn" style="min-width:110px;">
+      <option value="">None</option>
+      <option value="G">G</option>
+      <option value="PG13">PG-13</option>
+      <option value="PG17">PG-17</option>
+      <option value="PG21">PG-21</option>
     </select>
   </div>
 
   <div class="movie-grid">
-    <div class="movie-card" onclick="location.href='filmdetail.html?id=${film.id}'">
-
   </div>
+
+    <section id="recommendation-section" style="display:none;">
+      <h2 class="section-title">YOU MIGHT LIKE</h2>
+      <div class="movie-grid" id="recommendationGrid"></div>
+    </section>
+
 </main>
 </body>
 </html>
