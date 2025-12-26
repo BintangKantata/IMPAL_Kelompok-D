@@ -183,7 +183,8 @@
             return;
         }
 
-        localStorage.setItem('customer', JSON.stringify(data));
+        localStorage.setItem("customer", JSON.stringify(data));
+        localStorage.setItem("customerId", data.id);
         window.location.href = 'homepage.html';
 
     } catch (err) {
