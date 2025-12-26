@@ -18,6 +18,7 @@
     .form-card .btn:hover { background: #1747a7;}
     .section-title { font-size:2rem; font-weight:900; letter-spacing:1px; margin-bottom:1.5rem;}
 
+  /* seat default style */
   .seat-btn {
     width: 40px;
     height: 40px;
@@ -29,14 +30,16 @@
     transition: 0.2s;
   }
 
+  /* booked seat */
   .seat-btn.booked {
     background: #4a5568;
     cursor: not-allowed;
     opacity: 0.5;
   }
 
+  /* selected seat */
   .seat-btn.selected {
-    background: #4299e1;
+    background: #5AC3E7;     /* biru */
     border-color: #63b3ed;
     transform: scale(1.1);
   }
@@ -44,6 +47,35 @@
   .seat-btn:hover:not(.booked):not(.selected) {
     background: #3b4758;
   }
+
+    #confirmBookingBtn {
+      background: #5AC3E7;
+      color: black;
+      transition: color 0.2s ease;
+    }
+
+    #confirmBookingBtn:hover {
+      background: #5AC3E7;
+      color: white;
+    }
+
+    .section-title text-white mb-3{
+      font-weight: 550;
+    }
+
+    #fnbYes,
+    #fnbSkip {
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+
+    #fnbYes:hover,
+    #fnbSkip:hover {
+      color: white !important;
+    }
+
+
+
   </style>
 </head>
 
@@ -83,6 +115,7 @@
   </div>
 </main>
 
+<!-- MODAL FNB -->
 <div id="fnbModal" class="modal-overlay" style="
     display:none;
     position: fixed; left:0; top:0;
@@ -91,7 +124,7 @@
     justify-content: center; align-items: center;
 ">
   <div class="modal-box" style="
-    background: rgba(255,255,255,0.10);
+    background: linear-gradient(to right, #0e1d24 0%, #0e1d24 100%);
     padding: 2rem;
     border-radius: 1.5rem;
     width: 320px;
@@ -99,13 +132,13 @@
     font-family: 'Montserrat', Arial, sans-serif;
     color: #fff;
 ">
-    <h3 style="font-size:1.3rem; font-weight:900; margin-bottom:1.2rem;">
+    <h3 style="font-size:1.3rem; font-weight:600; margin-bottom:1.2rem;">
       Do you want to buy Food and Beverages?
     </h3>
 
     <button id="fnbYes" style="
-      background:#2365df;
-      color:white;
+      background:#5AC3E7;
+      color:black;
       padding:0.8rem 1rem;
       border:none;
       border-radius:0.6rem;
@@ -115,8 +148,8 @@
   ">Yes</button>
 
     <button id="fnbSkip" style="
-      background:#1747a7;
-      color:white;
+      background: rgba(255,255,255,0.20);
+      color:black;
       padding:0.8rem 1rem;
       border:none;
       border-radius:0.6rem;
@@ -132,6 +165,7 @@
 
   document.addEventListener("DOMContentLoaded", async function () {
 
+    // ========== VALIDASI LOGIN ==========
     const rawCustomer = localStorage.getItem("customer");
     if (!rawCustomer) {
       alert("Silakan login terlebih dahulu.");
@@ -141,6 +175,7 @@
     const customer = JSON.parse(rawCustomer);
     const customerId = customer.id;
 
+    // ========== AMBIL scheduleId ==========
     const params = new URLSearchParams(window.location.search);
     const scheduleId = params.get("scheduleId");
     if (!scheduleId) {
@@ -149,6 +184,7 @@
       return;
     }
 
+    // ========== ELEMENT ==========
     const seatContainer = document.getElementById("seatContainer");
     const selectedSeatsDisplay = document.getElementById("selectedSeats");
     const totalPriceDisplay = document.getElementById("totalPrice");
@@ -157,18 +193,21 @@
     const fnbSkipBtn = document.getElementById("fnbSkip");
     const confirmBookingBtn = document.getElementById("confirmBookingBtn");
 
-    let seatsData = [];
-    let selectedSeats = [];
+    // ========== STATE ==========
+    let seatsData = [];       // array of seat objects from server
+    let selectedSeats = [];   // array of codes user pilih
 
+    // ======= HELPER: format harga =======
     function formatRp(n) {
       return "Rp " + Number(n).toLocaleString("id-ID");
     }
 
+    // ======= LOAD SEATS DARI BACKEND =======
     async function loadSeats() {
       try {
         const res = await fetch(`${API}/schedules/${scheduleId}/seats`);
         if (!res.ok) throw new Error("Gagal memuat seats");
-        seatsData = await res.json();
+        seatsData = await res.json(); // asumsikan array ScheduleSeat {id, code, booked, bookedByCustomerId}
       } catch (e) {
         console.error(e);
         alert("Gagal memuat kursi. Coba refresh.");
@@ -176,11 +215,14 @@
       }
 
       renderSeats();
+      // jika user sebelumnya sudah memilih dan disimpan di localStorage, restore
       const saved = JSON.parse(localStorage.getItem("selectedSeats") || "[]");
+      // hanya restore jika semua kursi saved masih tersedia (tidak dibooking)
       if (Array.isArray(saved) && saved.length) {
         const availableCodes = new Set(seatsData.filter(s => !s.booked).map(s => s.code));
         selectedSeats = saved.filter(code => availableCodes.has(code));
         updateSummary();
+        // mark yang terpilih di UI
         selectedSeats.forEach(code => {
           const el = seatContainer.querySelector(`[data-code="${code}"]`);
           if (el) el.classList.add("selected");
@@ -188,6 +230,7 @@
       }
     }
 
+    // ======= RENDER SEAT GRID =======
     function renderSeats() {
   seatContainer.innerHTML = "";
 
@@ -208,6 +251,7 @@
     btn.addEventListener("click", () => {
       if (seat.booked) return;
 
+      // toggle selection
       if (btn.classList.contains("selected")) {
         btn.classList.remove("selected");
         selectedSeats = selectedSeats.filter(c => c !== seat.code);
@@ -227,26 +271,31 @@
   seatContainer.style.gap = "6px";
 }
 
-    // ======= UPDATE RINGKASAN =======
+
     function updateSummary() {
       selectedSeatsDisplay.innerText = selectedSeats.length ? selectedSeats.join(", ") : "-";
       const total = selectedSeats.length * ticketPrice;
       totalPriceDisplay.innerText = formatRp(total);
     }
 
+
     function confirmBooking() {
       if (selectedSeats.length === 0) {
         alert("Silakan pilih setidaknya satu kursi.");
         return;
       }
+
       localStorage.setItem("selectedSeats", JSON.stringify(selectedSeats));
       localStorage.setItem("seatTotalPrice", String(selectedSeats.length * ticketPrice));
       localStorage.setItem("scheduleId", String(scheduleId));
       localStorage.setItem("customerId", String(customerId));
+
       fnbModal.style.display = "flex";
     }
 
+
     fnbYesBtn.addEventListener("click", () => {
+
       window.location.href = `foodorder.html?scheduleId=${scheduleId}`;
     });
 
@@ -254,15 +303,18 @@
       window.location.href = `payment.html?scheduleId=${scheduleId}`;
     });
 
+
     window.addEventListener("click", (e) => {
       if (e.target === fnbModal) fnbModal.style.display = "none";
     });
+
 
     if (confirmBookingBtn) {
       confirmBookingBtn.addEventListener("click", confirmBooking);
     } else {
       console.warn("Tombol confirmBookingBtn tidak ditemukan di DOM.");
     }
+
 
     await loadSeats();
 
