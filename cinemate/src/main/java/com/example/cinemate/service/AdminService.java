@@ -16,7 +16,6 @@ public class AdminService {
         Admin admin = adminRepo.findByEmail(req.getEmail())
                 .orElseThrow(() -> new RuntimeException("Email tidak ditemukan"));
 
-        // cek hash password
         if (!admin.getPassword().equals(req.getPassword())) {
             throw new RuntimeException("Password salah");
         }
