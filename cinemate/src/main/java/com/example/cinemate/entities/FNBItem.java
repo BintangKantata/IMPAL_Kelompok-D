@@ -4,7 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter
+@Getter
+@Setter
 @Entity
 @Table(name = "fnb_items")
 public class FNBItem {
@@ -15,18 +16,22 @@ public class FNBItem {
 
     private String name;
 
+    @Column(length = 500)
+    private String description;
+
+    private Long price; // rupiah
+
+    @Enumerated(EnumType.STRING)
+    private FnbType type;
+
     private Integer quantity;
 
+    private String imageUrl;
+
     @ManyToOne
-    @JoinColumn(name = "location_id")
+    @JoinColumn(name = "location_id", nullable = false)
     private Location location;
 
     public FNBItem() {}
-
-    public FNBItem(String name, Integer quantity, Location location) {
-        this.name = name;
-        this.quantity = quantity;
-        this.location = location;
-    }
 }
 
