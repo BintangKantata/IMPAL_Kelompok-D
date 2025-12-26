@@ -1,5 +1,6 @@
 package com.example.cinemate.controller;
 
+import com.example.cinemate.dto.FNBItemRequest;
 import com.example.cinemate.dto.PurchaseRequest;
 import com.example.cinemate.entities.FNBItem;
 import com.example.cinemate.service.FNBItemService;
@@ -17,17 +18,32 @@ public class FNBItemController {
 
     private final FNBItemService fnbService;
 
-    @GetMapping("/{locationId}")
-    public List<FNBItem> getFnb(@PathVariable Long locationId) {
-        return fnbService.getFnbByLocation(locationId);
+    @GetMapping("/location/{locationId}")
+    public List<FNBItem> getByLocation(@PathVariable Long locationId) {
+        return fnbService.getByLocation(locationId);
     }
 
-    @PutMapping("/{itemId}")
+    @PostMapping
+    public FNBItem create(@RequestBody FNBItemRequest req) {
+        return fnbService.create(req);
+    }
+
+    @PutMapping("/{id}")
+    public FNBItem update(@PathVariable Long id, @RequestBody FNBItemRequest req) {
+        return fnbService.update(id, req);
+    }
+
+    @PutMapping("/{id}/quantity")
     public FNBItem updateQuantity(
-            @PathVariable Long itemId,
+            @PathVariable Long id,
             @RequestParam Integer quantity) {
 
-        return fnbService.updateQuantity(itemId, quantity);
+        return fnbService.updateQuantity(id, quantity);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        fnbService.delete(id);
     }
 
     @PutMapping("/purchase")
