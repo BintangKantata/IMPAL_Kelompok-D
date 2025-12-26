@@ -41,7 +41,7 @@ public class FilmService {
         film.setTitle(updated.getTitle());
         film.setGenres(updated.getGenres());
         film.setDuration(updated.getDuration());
-        updated.setImage(film.getImage());
+        film.setImage(updated.getImage());
         film.setDescription(updated.getDescription());
         film.setRu(updated.getRu());
 
