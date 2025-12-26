@@ -14,7 +14,7 @@
         }
 
         .page {
-            max-width: 700px;  /* lebih compact */
+            max-width: 700px;  
             margin: auto;
             padding: 30px;
         }
@@ -26,7 +26,7 @@
             font-weight: 700;
         }
 
-        /* --- CARD INPUT --- */
+   
         .card {
             background: rgba(255,255,255,0.10);
             padding: 25px;
@@ -48,7 +48,7 @@
             border-radius: 0.6rem;
             background: rgba(255,255,255,0.18);
             border: 1px solid #2c3a40;
-            color: #fff;  /* tetap putih tapi kita atur placeholder */
+            color: #fff;
             margin-top: 6px;
             font-size: 1rem;
         }
@@ -64,11 +64,11 @@
         }
 
         #description {
-            color: #fff;          /* teks yang diketik */
-            font-family: sans-serif; /* font teks */
+            color: #fff;
+            font-family: sans-serif; 
         }
 
-        /* placeholder */
+
         #description::placeholder {
             color: #667478;
             font-family: sans-serif;
@@ -80,9 +80,25 @@
             filter: invert(1);
         }
 
-        /* Tombol */
+
         button {
-            background: #2365df;
+            background: #22c55e;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 0.6rem;
+            cursor: pointer;
+            margin-top: 18px;
+            font-weight: bold;
+            color: white;
+            transition: 0.2s;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #46cf78;
+        }
+
+        #btnCancel {
+            background: #fa3e48;
             border: none;
             padding: 12px 18px;
             border-radius: 0.6rem;
@@ -93,11 +109,11 @@
             transition: 0.2s;
             font-size: 1rem;
         }
-        button:hover {
-            background: #1747a7;
+        #btnCancel:hover {
+            background: #ff4d56;
         }
 
-        /* Container grid */
+
         #genre-container {
             display: flex;
             flex-wrap: wrap;
@@ -105,12 +121,12 @@
             margin-top: 6px;
         }
 
-        /* Sembunyikan checkbox asli */
+
         #genre-container input[type="checkbox"] {
             display: none;
         }
 
-        /* Label sebagai button */
+
         #genre-container label {
             display: inline-block;
             padding: 8px 15px;
@@ -123,55 +139,220 @@
             user-select: none;
         }
 
-        /* Hover effect */
+
         #genre-container label:hover {
             background: rgba(255,255,255,0.28);
         }
 
-        /* Checked effect: genre dipilih */
+
         #genre-container input[type="checkbox"]:checked + label {
-            background: #2365df; /* biru Cinemate */
+            background: #5AC3E7;
             color: white;
             font-weight: 700;
         }
 
 
-        /* Table */
+        .admin-layout {
+          display: flex;
+          min-height: 100vh;
+        }
+
+
+        .sidebar {
+          width: 220px;
+          background: linear-gradient(to top, #0a1115 95%, transparent);
+          backdrop-filter: blur(10px);
+          box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+          padding: 20px;
+          margin-right: 100px;
+
+          position: sticky;
+          top: 0;
+          height: 200vh;
+        }
+
+        .sidebar h2 {
+          margin-bottom: 30px;
+          color: #5AC3E7;
+        }
+
+        .sidebar a {
+          display: block;
+          color: #cbd5f5;
+          text-decoration: none;
+          padding: 10px;
+          border-radius: 6px;
+          margin-bottom: 8px;
+        }
+
+        .sidebar a.active,
+        .sidebar a:hover {
+          background: #5AC3E7;
+          color: #020617;
+        }
+
+
+        .content {bar
+          flex: 1;
+          padding: 30px;
+        }
+
+        .content-wrapper {
+          width: 101%;
+          margin: 0 auto;
+        }
+
+
+        .table-top {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 12px;
+        }
+
+        .page-header button {
+          padding: 10px 16px;
+          border: none;
+          background: #5AC3E7;
+          color: #020617;
+          border-radius: 6px;
+          cursor: pointer;
+          margin-bottom: 21px;
+        }
+
+        .page-header button:hover{
+          color: #fff;
+        }
+
+        .page-actions {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+
+ 
+        #searchFilm {
+          width: 220px;
+          padding: 8px 12px;
+          border-radius: 6px;
+          border: 1px solid #2c3a40;
+          background: rgba(255,255,255,0.18);
+          color: #ffffff;
+        }
+
+        #searchFilm::placeholder {
+          color: #94a3b8;
+        }
+
         table {
-            width: 100%;
-            border-collapse: collapse;
-            background: rgba(255,255,255,0.08);
-            border-radius: 0.8rem;
-            overflow: hidden;
+          width: 100%;
+          border-collapse: collapse;
+          background: #fff;
+          color: #0d0d0d;
+          border-radius: 10px;
+          overflow: hidden;
         }
 
-        th {
-            background: rgba(255,255,255,0.16);
-            padding: 12px;
-            text-align: left;
-            color: white;
-            font-size: 14px;
+        thead {
+          background: #5AC3E7;
         }
 
-        td {
-            padding: 12px;
-            border-top: 1px solid #2e3c42;
-            font-size: 14px;
+        th, td {
+          padding: 12px;
+          border-bottom: 1px solid #1e293b;
         }
 
-        .action-btn {
-            background: #37474f;
-            margin-right: 5px;
-            padding: 7px 12px;
-            border-radius: 6px;
-            font-size: 12px;
+
+        table thead th {
+          color: #ffffff !important;
+          text-align: left !important;
         }
 
-        .action-btn:hover {
-            background: #263238;
+        table tbody td {
+          color: #000000;
+          text-align: left;
         }
 
-        /* Responsive: form container */
+
+        .edit-btn {
+          background: #22c55e;
+          border: none;
+          padding: 6px 10px;
+          margin-right: 5px;
+          border-radius: 6px;
+          cursor: pointer;
+        }
+
+        .edit-btn:hover {
+          background: #46cf78;
+        }
+
+        .delete-btn {
+          background: #fa3e48;
+          border: none;
+          padding: 6px 10px;
+          margin-right: 5px;
+          border-radius: 6px;
+          cursor: pointer;
+        }
+
+        .delete-btn:hover {
+          background: #ff4d56;
+        }
+
+        .schedule-btn {
+          background: #eba338;
+          border: none;
+          padding: 6px 10px;
+          margin-right: 5px;
+          border-radius: 6px;
+          cursor: pointer;
+        }
+
+        .schedule-btn:hover {
+          background: #ebb25e;
+        }
+
+        button {
+          cursor: pointer;
+        }
+
+
+        .pagination-wrapper {
+          width: 100%;
+          margin-top: 15px;
+
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        #pagination {
+          display: flex;
+          flex-wrap: wrap;
+        }
+
+
+        #pagination button {
+          margin: 0 4px;
+          padding: 6px 10px;
+          border: none;
+          background: #020617;
+          color: #cbd5f5;
+          border-radius: 4px;
+        }
+
+        #pagination button:active {
+          background: #5AC3E7;
+          color: #020617;
+        }
+
+        #pagination button:disabled {
+          opacity: 0.4;
+        }
+
+
         @media screen and (max-width: 768px) {
             .page {
                 padding: 15px;
@@ -180,21 +361,99 @@
                 font-size: 0.95rem;
             }
         }
+
+
+        .modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+
+          background: rgba(0,0,0,0.7);
+          display: none;
+
+          align-items: center;
+          justify-content: center;
+
+          z-index: 9999;
+        }
+
+
+        .modal-content {
+          background: radial-gradient(circle at top left, #0e1a20 0%, #11252d 40%, #0d1418 100%);
+          padding: 24px;
+          border-radius: 10px;
+          width: 700px;
+          max-height: 90vh;
+          overflow-y: auto;
+          scroll-behavior: smooth;
+
+
+          scrollbar-width: none;
+
+
+          -ms-overflow-style: none;
+        }
+
+        .modal-content::-webkit-scrollbar {
+          display: none;
+
+          position: relative;
+        }
+
+
+
+        #closeModal {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          background: none;
+          border: none;
+          font-size: 18px;
+          cursor: pointer;
+        }
+
     </style>
 </head>
 
 <body>
-<div class="page">
+<div class="admin-layout">
 
-    <h2 id="formTitle">Add New Film</h2>
 
-    <form id="filmForm" class="card">
-        <input type="hidden" id="filmId">
+    <aside class="sidebar">
+        <h2>ADMIN</h2>
+        <a href="admin-film.html" class="active">🎬 Film</a>
+        <a href="admin-fnb.html">🍿 F&B</a>
+    </aside>
 
-        <div>
-            <label>Title:</label>
-            <input type="text" id="title" placeholder="Enter film title" required>
-        </div>
+
+    <main class="content">
+        <div class="content-wrapper">
+
+            <h1>Film Management</h1>
+
+            <div class="page-header table-top">
+                <button onclick="openModal()">+ Add Film</button>
+                <input id="searchFilm" type="text" placeholder="Search film title..." />
+            </div>
+
+            <!-- ===== MODAL POPUP ===== -->
+    <div id="filmModal" class="modal-overlay">
+
+        <div class="modal-content">
+
+            <button type="button" id="closeModal" onclick="closeModal()">✕</button>
+
+            <h2 id="formTitle">Add New Film</h2>
+
+            <form id="filmForm" class="card">
+                <input type="hidden" id="filmId">
+
+                <div>
+                    <label>Title:</label>
+                    <input type="text" id="title" required>
+                </div>
 
         <div>
             <label>Genre:</label>
@@ -207,277 +466,351 @@
                 <label for="genre-comedy">Comedy</label>
                 <input type="checkbox" id="genre-thriller" value="THRILLER">
                 <label for="genre-thriller">Thriller</label>
-
+                <input type="checkbox" id="genre-science_fiction" value="SCIENCE_FICTION">
+                <label for="genre-science_fiction">Science Fiction</label>
+                <input type="checkbox" id="genre-documentary" value="DOCUMENTARY">
+                <label for="genre-documentary">Documentary</label>
+                <input type="checkbox" id="genre-adventure" value="ADVENTURE">
+                <label for="genre-adventure">Adventure</label>
+                <input type="checkbox" id="genre-animation" value="ANIMATION">
+                <label for="genre-animation">Animation</label>
+                <input type="checkbox" id="genre-mystery" value="MYSTERY">
+                <label for="genre-mystery">Mystery</label>
+                <input type="checkbox" id="genre-war" value="WAR">
+                <label for="genre-war">War</label>
+                <input type="checkbox" id="genre-fiction" value="FICTION">
+                <label for="genre-fiction">Fiction</label>
+                <input type="checkbox" id="genre-spy" value="SPY">
+                <label for="genre-spy">Spy</label>
+                <input type="checkbox" id="genre-romance" value="ROMANCE">
+                <label for="genre-romance">Romance</label>
                 <input type="checkbox" id="genre-fantasy" value="FANTASY">
                 <label for="genre-fantasy">Fantasy</label>
-
                 <input type="checkbox" id="genre-drama" value="DRAMA">
                 <label for="genre-drama">Drama</label>
-
                 <input type="checkbox" id="genre-biography" value="BIOGRAPHY">
                 <label for="genre-biography">Biography</label>
-
                 <input type="checkbox" id="genre-family" value="FAMILY">
                 <label for="genre-family">Family</label>
-
                 <input type="checkbox" id="genre-historical" value="HISTORICAL">
                 <label for="genre-historical">Historical</label>
-
                 <input type="checkbox" id="genre-crime" value="CRIME">
                 <label for="genre-crime">Crime</label>
-
                 <input type="checkbox" id="genre-superhero" value="SUPERHERO">
                 <label for="genre-superhero">Superhero</label>
-
                 <input type="checkbox" id="genre-psychological" value="PSYCHOLOGICAL">
                 <label for="genre-psychological">Psychological</label>
-
                 <input type="checkbox" id="genre-cyberpunk" value="CYBERPUNK">
                 <label for="genre-cyberpunk">Cyberpunk</label>
-
                 <input type="checkbox" id="genre-steampunk" value="STEAMPUNK">
                 <label for="genre-steampunk">Steampunk</label>
-
                 <input type="checkbox" id="genre-anthology" value="ANTHOLOGY">
                 <label for="genre-anthology">Anthology</label>
-
                 <input type="checkbox" id="genre-zombie" value="ZOMBIE">
                 <label for="genre-zombie">Zombie</label>
-
                 <input type="checkbox" id="genre-art" value="ART">
                 <label for="genre-art">Art</label>
-
                 <input type="checkbox" id="genre-politicial" value="POLITICIAL">
                 <label for="genre-politicial">Political</label>
-
                 <input type="checkbox" id="genre-military" value="MILITARY">
                 <label for="genre-military">Military</label>
-
                 <input type="checkbox" id="genre-survival" value="SURVIVAL">
                 <label for="genre-survival">Survival</label>
-
                 <input type="checkbox" id="genre-space" value="SPACE">
                 <label for="genre-space">Space</label>
-
                 <input type="checkbox" id="genre-disaster" value="DISASTER">
                 <label for="genre-disaster">Disaster</label>
-
                 <input type="checkbox" id="genre-school" value="SCHOOL">
                 <label for="genre-school">School</label>
-
                 <input type="checkbox" id="genre-wildlife" value="WILDLIFE">
                 <label for="genre-wildlife">Wildlife</label>
-
                 <input type="checkbox" id="genre-animals" value="ANIMALS">
                 <label for="genre-animals">Animals</label>
-
                 <input type="checkbox" id="genre-futuristic" value="FUTURISTIC">
                 <label for="genre-futuristic">Futuristic</label>
             </div>
         </div>
 
-        <div>
-            <label>Duration (minutes):</label>
-            <input type="number" id="duration" placeholder="e.g. 120" required>
+                <div>
+                    <label>Duration (minutes):</label>
+                    <input type="number" id="duration" required>
+                </div>
+
+                <div>
+                    <label>Image URL:</label>
+                    <input type="text" id="image" required>
+                </div>
+
+                <div>
+                    <label>Description:</label>
+                    <textarea id="description" rows="4" required></textarea>
+                </div>
+
+                <div>
+                    <label>Movie Rating:</label>
+                    <select id="ru" required>
+                        <option value="G">G</option>
+                        <option value="PG13">PG-13</option>
+                        <option value="PG17">PG-17</option>
+                        <option value="PG21">PG-21</option>
+                    </select>
+                </div>
+
+                <button type="submit">Save</button>
+                <button type="button" id="btnCancel" style="display:none;">Cancel</button>
+            </form>
+
         </div>
+    </div>
 
-        <div>
-            <label>Image URL for poster:</label>
-            <input type="text" id="image" placeholder="https://example.com/poster.jpg" required>
+    <div id="message"></div>
+
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Genre</th>
+                <th>Duration</th>
+                <th>Description</th>
+                <th>Rating</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody id="filmTableBody"></tbody>
+        </table>
+
+        <div class="pagination-wrapper">
+            <span id="pageInfo"></span>
+            <div id="pagination"></div>
         </div>
-
-        <div>
-            <label>Description:</label>
-            <textarea id="description" rows="4"
-                      placeholder="Enter film description..."
-                      required>
-    </textarea>
         </div>
-
-        <div>
-            <label>Movie Rating:</label>
-            <select id="ru" required>
-                <option value="ALL_AGES">All ages</option>
-                <option value="PG13">PG-13</option>
-                <option value="PG17">PG-17</option>
-                <option value="PG21">PG-21</option>
-            </select>
-        </div>
-
-        <button type="submit" id="btnSave">Save</button>
-        <button type="button" id="btnCancel" style="display:none;">Cancel Edit</button>
-    </form>
-
+    </main>
 </div>
-
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Title</th>
-        <th>Genre</th>
-        <th>Duration</th>
-        <th>Image</th>
-        <th>Description</th>
-        <th>Rating</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody id="filmTableBody">
-    <!-- rows akan diisi JS -->
-    </tbody>
-</table>
-
 
 <script>
     const API_URL = "http://localhost:8080/api/admin/films";
+
+    const admin = localStorage.getItem("admin");
+    if (!admin) {
+      alert("Silakan login sebagai admin terlebih dahulu");
+      window.location.href = "admin-login.html";
+    }
+
+    let allFilms = [];
+    let filteredFilms = [];
+    let currentPage = 1;
+    const rowsPerPage = 7;
 
     document.addEventListener("DOMContentLoaded", loadFilms);
 
     async function loadFilms() {
       try {
         const res = await fetch(API_URL);
-        const films = await res.json();
-
-        const tbody = document.getElementById("filmTableBody");
-        tbody.innerHTML = "";
-
-        films.forEach(film => {
-          tbody.innerHTML += `
-            <tr>
-              <td>${film.id}</td>
-              <td>${film.title}</td>
-              <td>${film.genre}</td>
-              <td>${film.duration}</td>
-              <td>${film.image}</td>
-              <td>${film.description}</td>
-              <td>${film.ru}</td>
-              <td>
-                <button onclick="editFilm(
-                    ${film.id},
-                    '${film.title}',
-                    '${(film.genres || []).join(",")}',
-                    ${film.duration},
-                    '${film.image}',
-                    \`${film.description}\`,
-                    '${film.ru}}'
-                )">Edit</button>
-
-                <button onclick="deleteFilm(${film.id})">Delete</button>
-                <button onclick="window.location.href='admin-film-schedule.html?filmId=${film.id}'">Schedule</button>
-
-              </td>
-            </tr>
-          `;
-        });
-
+        allFilms = await res.json();
+        filteredFilms = [...allFilms];
+        currentPage = 1;
+        renderTable();
       } catch (err) {
+        console.error(err);
         showError("Failed to load films");
       }
     }
 
-    document.getElementById("filmForm").addEventListener("submit", async function(event) {
-    event.preventDefault();
+    function renderTable() {
+      const tbody = document.getElementById("filmTableBody");
+      tbody.innerHTML = "";
 
-    const id = document.getElementById("filmId").value;
+      const start = (currentPage - 1) * rowsPerPage;
+      const end = start + rowsPerPage;
+      const pageData = filteredFilms.slice(start, end);
 
-    const checkboxes = document.querySelectorAll('#genre-container input[type="checkbox"]:checked');
-    const genres = Array.from(checkboxes).map(cb => cb.value);
+      pageData.forEach(film => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${film.id}</td>
+            <td>${film.title}</td>
+            <td>${Array.isArray(film.genres) ? film.genres.join(", ") : "-"}</td>
+            <td>${film.duration}</td>
+            <td>${film.description}</td>
+            <td>${film.ru}</td>
+            <td>
+              <button class="edit-btn"
+                data-id="${film.id}"
+                data-title="${film.title}"
+                data-duration="${film.duration}"
+                data-image="${film.image}"
+                data-description="${film.description}"
+                data-genres='${JSON.stringify(film.genres || [])}'
+                data-ru="${film.ru}">
+                Edit
+              </button>
 
-    const filmData = {
+              <button class="delete-btn" onclick="deleteFilm(${film.id})">Delete</button>
+
+              <button class="schedule-btn"
+                onclick="window.location.href='admin-film-schedule.html?filmId=${film.id}'">
+                Schedule
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+
+      renderPagination();
+    }
+
+    function resetForm() {
+      const form = document.getElementById("filmForm");
+      if (form) form.reset();
+
+      const idInput = document.getElementById("filmId");
+      if (idInput) idInput.value = "";
+
+      document
+        .querySelectorAll('#genre-container input[type="checkbox"]')
+        .forEach(cb => cb.checked = false);
+
+      const title = document.getElementById("formTitle");
+      if (title) title.innerText = "Add New Film";
+
+      const btnCancel = document.getElementById("btnCancel");
+      if (btnCancel) btnCancel.style.display = "none";
+
+      const msg = document.getElementById("message");
+      if (msg) msg.innerText = "";
+    }
+    function openModal() {
+      resetForm();
+
+      document.getElementById("filmModal").style.display = "flex";
+
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeModal() {
+      document.getElementById("filmModal").style.display = "none";
+      document.body.style.overflow = "";
+      resetForm();
+    }
+
+    document.getElementById("searchFilm").addEventListener("input", e => {
+      const keyword = e.target.value.toLowerCase();
+      filteredFilms = allFilms.filter(f =>
+        f.title.toLowerCase().includes(keyword)
+      );
+      currentPage = 1;
+      renderTable();
+    });
+
+    function renderPagination() {
+      const pagination = document.getElementById("pagination");
+      const pageInfo = document.getElementById("pageInfo");
+      const totalPages = Math.ceil(filteredFilms.length / rowsPerPage);
+
+      pageInfo.innerText = `Showing page ${currentPage} of ${totalPages}`;
+      pagination.innerHTML = "";
+
+      const prev = document.createElement("button");
+      prev.innerText = "<";
+      prev.disabled = currentPage === 1;
+      prev.onclick = () => { currentPage--; renderTable(); };
+      pagination.appendChild(prev);
+
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement("button");
+        btn.innerText = i;
+        if (i === currentPage) {
+          btn.style.background = "#5AC3E7";
+          btn.style.color = "#020617";
+        }
+        btn.onclick = () => { currentPage = i; renderTable(); };
+        pagination.appendChild(btn);
+      }
+
+      const next = document.createElement("button");
+      next.innerText = ">";
+      next.disabled = currentPage === totalPages;
+      next.onclick = () => { currentPage++; renderTable(); };
+      pagination.appendChild(next);
+    }
+
+    document.getElementById("filmForm").addEventListener("submit", async e => {
+      e.preventDefault();
+
+      const id = document.getElementById("filmId").value;
+
+      const genres = Array.from(
+        document.querySelectorAll('#genre-container input[type="checkbox"]:checked')
+      ).map(cb => cb.value);
+
+      const filmData = {
         title: document.getElementById("title").value,
-        duration: document.getElementById("duration").value,
+        duration: Number(document.getElementById("duration").value),
         image: document.getElementById("image").value,
         description: document.getElementById("description").value,
         genres: genres,
         ru: document.getElementById("ru").value
-    };
+      };
 
-    try {
-        let response;
+      try {
+        const res = await fetch(id ? `${API_URL}/${id}` : API_URL, {
+          method: id ? "PUT" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(filmData)
+        });
 
-        if (id === "") {
-            response = await fetch(API_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(filmData)
-            });
-        } else {
-            response = await fetch(`${API_URL}/${id}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(filmData)
-            });
-        }
+        if (!res.ok) return showError("Failed to save film");
 
-        if (!response.ok) {
-            showError("Failed to save film");
-            return;
-        }
-
-        resetForm();
+        closeModal();
         loadFilms();
-
-    } catch (err) {
-        showError("Server error");
+      } catch (err) {
         console.error(err);
-    }
-});
-
-    function editFilm(id, title, genres, duration, image, description) {
-    document.getElementById("filmId").value = id;
-    document.getElementById("title").value = title;
-    document.getElementById("duration").value = duration;
-    document.getElementById("image").value = image;
-    document.getElementById("description").value = description;
-    document.getElementById("ru").value = ru;
-
-    // RESET semua checkbox terlebih dahulu
-    document.querySelectorAll('#genre-container input[type="checkbox"]').forEach(cb => cb.checked = false);
-
-    // CENTANG GENRE YANG DIMILIKI FILM
-    genres.forEach(g => {
-        const checkbox = document.querySelector(`#genre-container input[value="${g}"]`);
-        if (checkbox) checkbox.checked = true;
+        showError("Server error");
+      }
     });
-
-    // TAMPILKAN UI EDIT
-    document.getElementById("formTitle").innerText = "Edit Film";
-    document.getElementById("btnCancel").style.display = "inline";
-}
-
-    document.getElementById("btnCancel").addEventListener("click", resetForm);
-
-    function resetForm() {
-      document.getElementById("filmForm").reset();
-      document.getElementById("filmId").value = "";
-      document.getElementById("formTitle").innerText = "Add New Film";
-      document.getElementById("btnCancel").style.display = "none";
-      document.getElementById("message").innerText = "";
-    }
 
     async function deleteFilm(id) {
       if (!confirm("Delete this film?")) return;
-
-      try {
-        const res = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-
-        if (!res.ok) {
-          showError("Failed to delete film");
-          return;
-        }
-
-        loadFilms();
-      } catch (err) {
-        showError("Server error");
-      }
+      await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+      loadFilms();
     }
 
-    function showError(message) {
-      document.getElementById("message").innerText = message;
+    /* ===== EDIT HANDLER ===== */
+    document.addEventListener("click", e => {
+      if (!e.target.classList.contains("edit-btn")) return;
+
+      const btn = e.target;
+
+      document.getElementById("filmId").value = btn.dataset.id;
+      document.getElementById("title").value = btn.dataset.title;
+      document.getElementById("duration").value = btn.dataset.duration;
+      document.getElementById("image").value = btn.dataset.image;
+      document.getElementById("description").value = btn.dataset.description;
+      document.getElementById("ru").value = btn.dataset.ru;
+
+      document
+        .querySelectorAll('#genre-container input[type="checkbox"]')
+        .forEach(cb => cb.checked = false);
+
+      JSON.parse(btn.dataset.genres || "[]").forEach(g => {
+        const cb = document.querySelector(`#genre-container input[value="${g}"]`);
+        if (cb) cb.checked = true;
+      });
+
+      document.getElementById("filmModal").style.display = "flex";
+    });
+
+    function closeModal() {
+      document.getElementById("filmModal").style.display = "none";
+      document.getElementById("filmForm").reset();
     }
 
+    function showError(msg) {
+      document.getElementById("message").innerText = msg;
+    }
 </script>
+
 
 </body>
 </html>
