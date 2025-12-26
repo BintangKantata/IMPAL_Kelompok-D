@@ -34,7 +34,11 @@
         }
 
         h3 {
-            font-weight: 800;
+            font-weight: 600;
+        }
+
+        h3 {
+            font-weight: 600;
             margin-bottom: .5rem;
             color: #fff;
         }
@@ -48,22 +52,23 @@
             margin-top: 1rem;
         }
 
-        /* Button utama - sama tipe dengan "Update Profil" */
         .btn {
             width: 100%;
             border: none;
-            background: #2365df;
+            background: #5AC3E7;
             padding: 0.9rem;
             font-size: 1.1rem;
-            color: white;
+            color: black;
             border-radius: 0.6rem;
             cursor: pointer;
             font-weight: 700;
             margin-top: 1.5rem;
+            transition: color 0.2s ease;
         }
 
         .btn:hover {
-            background: #1747a7;
+            background: #5AC3E7;
+            color: white;
         }
 
         /* Modal overlay */
@@ -78,7 +83,7 @@
 
         /* Modal box → seragam dengan profile-card style */
         .modal-content {
-            background: rgba(255,255,255,0.10);
+            background: linear-gradient(to right, #0e1d24 0%, #0e1d24 100%);
             padding: 2rem;
             border-radius: 1.5rem;
             width: 90%;
@@ -90,7 +95,7 @@
 
         .modal-content h3 {
             font-size: 1.4rem;
-            font-weight: 900;
+            font-weight: 600;
             margin-bottom: 0.5rem;
         }
 
@@ -113,21 +118,23 @@
         }
 
         .yes-btn {
-            background: #2365df;
-            color: white;
+            background: #5AC3E7;
+            color: black;
+            transition: color 0.2s ease;
         }
 
         .yes-btn:hover {
-            background: #1747a7;
+            color: white;
         }
 
         .no-btn {
             background: rgba(255,255,255,0.20);
-            color: white;
+            color: black;
+            transition: color 0.2s ease;
         }
 
         .no-btn:hover {
-            background: rgba(255,255,255,0.30);
+            color: white;
         }
     </style>
 </head>
@@ -198,17 +205,17 @@
         locationId = Number(localStorage.getItem("selectedLocationId") || 1);
         customerId = Number(localStorage.getItem("customerId"));
 
-        // ====== LOAD FNB NAMES ======
+
         let fnbMap = {}; // itemId -> name
         try {
-            const res = await fetch(`/api/fnb/${locationId}`);
+            const res = await fetch(`/api/fnb/location/${locationId}`);
             const data = await res.json();
             data.forEach(item => fnbMap[item.id] = item.name);
         } catch (err) {
             console.error("Gagal memuat F&B:", err);
         }
 
-        // ====== RENDER SUMMARY ======
+
         const seatListEl = document.getElementById("seatList");
         const seatPriceEl = document.getElementById("seatPrice");
         const fnbListEl = document.getElementById("fnbList");
@@ -236,14 +243,14 @@
         totalDisplayEl.innerText = "Total: Rp " + grand.toLocaleString("id-ID");
     }
 
-    // ==== PAYMENT FUNC ====
+
     async function processPayment() {
         if (!scheduleId) {
             alert("Schedule ID tidak ditemukan!");
             return;
         }
 
-        // 1. BOOK SEATS
+
         const res = await fetch(`/api/schedules/${scheduleId}/book`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -256,19 +263,19 @@
 
         const result = await res.json();
 
-        // SIMPAN ke localStorage untuk success.html
+
         localStorage.setItem("lastBookingId", result.bookingId);
         localStorage.setItem("scheduleId", scheduleId);
         localStorage.setItem("selectedSeats", JSON.stringify(seats));
         localStorage.setItem("seatTotalPrice", seatTotal);
         localStorage.setItem("fnbTotalPrice", fnbTotal);
 
-        // 2. PURCHASE FNB (optional)
         if (fnbItems.length > 0) {
             await fetch("/api/fnb/purchase", {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
+                    bookingId: result.bookingId,
                     locationId: locationId,
                     items: fnbItems
                 })
@@ -277,13 +284,13 @@
 
         alert("Payment Successful!");
 
-        // cleanup
+
         localStorage.removeItem("fnbItems");
 
         window.location.href = "success.html";
     }
 
-    // ==== ATTACH FUNC KE WINDOW ====
+
     window.openPayModal = openPayModal;
     window.closePayModal = closePayModal;
     window.processPayment = processPayment;
