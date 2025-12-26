@@ -7,61 +7,95 @@
 
   <style>
     body {
-      background: #111827;
-      color: white;
-      font-family: Arial, sans-serif;
-      min-height: 100vh;
-      padding: 20px;
-    }
-    .ticket-box {
-      background: #1F2937;
-      padding: 25px;
-      border-radius: 15px;
-      max-width: 600px;
-      margin: 40px auto;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-    }
-    .poster {
-      width: 140px;
-      border-radius: 10px;
-      margin-right: 20px;
-    }
-    .row {
-      display: flex;
-      flex-direction: row;
-      align-items: flex-start;
-    }
-    .label {
-      opacity: 0.6;
-      margin-top: 6px;
-    }
-    .value {
-      font-size: 18px;
-      margin-bottom: 8px;
-    }
-    .button-home {
-      margin-top: 25px;
-      padding: 12px;
-      width: 100%;
-      background: #10B981;
-      color: white;
-      font-size: 18px;
-      border-radius: 10px;
-      cursor: pointer;
-      text-align: center;
-    }
-    .button-home:hover {
-      background: #059669;
-    }
+                background: radial-gradient(circle at top left, #0e1a20 0%, #11252d 40%, #0d1418 100%);
+                color: #fff;
+                font-family: 'Montserrat', Arial, sans-serif;
+                min-height: 100vh;
+                padding: 2 rem
+            }
+
+        .ticket-box {
+              background: rgba(0,0,0,0.15);
+              border-radius: 1.5rem;
+              padding: 2rem;
+              max-width: 600px;
+              margin: auto;
+              margin-top: 40px;
+              box-shadow: 0 4px 32px 0 rgba(0,0,0,0.10);
+        }
+
+        h2 {
+          margin-top: 50px;
+        }
+
+        .poster {
+          width: 240px;
+          height: 340px;
+          object-fit: cover;
+          border-radius: 1.5rem;
+          margin-right: 24px; /* hanya jarak, tidak ubah ukuran */
+        }
+
+        .row {
+          display: flex;
+          flex-direction: row;
+          align-items: flex-start;
+          gap: 24px; /* jarak rapi antar kolom */
+        }
+
+        .label {
+          opacity: 0.6;
+          margin-top: 6px;
+        }
+
+        .barcode-label {
+          opacity: 0.6;
+          margin-top: 6px;
+          display: block;
+          text-align: center;
+        }
+
+
+        .value {
+          font-size: 18px;
+          margin-bottom: 8px;
+        }
+        .button-home {
+          margin-top: 25px;
+          padding: 12px;
+          width: 100%;
+          background: #5AC3E7;
+          color: black;
+          font-size: 18px;
+          font-weight: bold;
+          border-radius: 10px;
+          cursor: pointer;
+          text-align: center;
+          transition: color 0.2s ease;
+        }
+        .button-home:hover {
+          background: #5AC3E7;
+          color: white;
+        }
+
+        .barcode-wrapper{
+          margin-top: 30px;
+        }
+
+        #ticketBarcode {
+          margin-top: 8px;
+          width: fit-content;
+          margin-left: auto;
+          margin-right: auto; /* center horizontal */
+        }
   </style>
 </head>
 
 <body>
 
-<h2 class="text-center text-3xl font-bold mt-4">Payment Successful!</h2>
+<h2 class="text-center text-3xl font-bold mt-4"></h2>
 
 <div class="ticket-box">
-  <h3 class="text-2xl font-bold mb-4">Your Ticket</h3>
 
   <div class="row">
     <img id="filmPoster" class="poster" src="" alt="Film Poster">
@@ -69,6 +103,9 @@
     <div>
       <div class="label">Film</div>
       <div id="filmTitle" class="value"></div>
+
+      <div class="label">Location</div>
+      <div id="locationName" class="value"></div>
 
       <div class="label">Schedule</div>
       <div id="scheduleTime" class="value"></div>
@@ -84,63 +121,86 @@
     </div>
   </div>
 
+  <div class="barcode-wrapper">
+    <div class="barcode-label">Ticket Barcode</div>
+    <div id="ticketBarcode"></div>
+  </div>
+
+
   <div class="button-home" onclick="goHome()">Back to Home</div>
 </div>
 
 <script>
-  const API = "/api";
+    window.API = window.API || "/api";
 
-  const scheduleId = Number(localStorage.getItem("scheduleId"));
-  const seats = JSON.parse(localStorage.getItem("selectedSeats") || "[]");
-  const seatTotal = Number(localStorage.getItem("seatTotalPrice") || 0);
-  const fnbTotal = Number(localStorage.getItem("fnbTotalPrice") || 0);
-  const bookingId = localStorage.getItem("lastBookingId");
+  const params = new URLSearchParams(window.location.search);
+  const bookingId =
+    params.get("bookingId") ||
+    localStorage.getItem("lastBookingId");
 
-  // Render booking info
-  document.getElementById("bookingIdDisplay").textContent = bookingId ?? "-";
-  document.getElementById("seatList").textContent = seats.length ? seats.join(", ") : "-";
-  document.getElementById("totalPaid").innerText = "Rp " + (seatTotal + fnbTotal).toLocaleString("id-ID");
+  if (!bookingId) {
+    alert("Booking tidak ditemukan");
+    window.location.href = "homepage.html";
+  }
 
-  async function loadFilmAndSchedule() {
+  async function loadTicket() {
     try {
-      // 1. Ambil schedule
-      const schedRes = await fetch(`${API}/schedules/${scheduleId}`);
-      const schedule = await schedRes.json();
+      const res = await fetch(`${API}/bookings/${bookingId}/detail`);
+      const data = await res.json();
 
-      // Tampilkan waktu
-      const time = schedule.date + " " + schedule.time;
-      document.getElementById("scheduleTime").textContent = time;
-
-      // 2. Ambil filmId dari schedule
-      const filmId = schedule.filmId; // <-- pastikan ini sesuai API-mu
-
-      // 3. Ambil detail film
-      const filmRes = await fetch(`${API}/films/${filmId}`);
-      const film = await filmRes.json();
-
-      // Render film info
-      document.getElementById("filmTitle").textContent = film.title;
+      document.getElementById("filmTitle").textContent = data.filmTitle;
       document.getElementById("filmPoster").src =
-        film.image && film.image.trim() !== ""
-          ? film.image
+        data.filmImage?.trim()
+          ? data.filmImage
           : "https://via.placeholder.com/300x450?text=No+Image";
 
+      document.getElementById("locationName").textContent = data.locationName;
+      document.getElementById("scheduleTime").textContent =
+        data.date + " " + data.time;
+
+      document.getElementById("seatList").textContent = data.seats;
+      document.getElementById("totalPaid").textContent =
+        "Rp " + data.totalPrice.toLocaleString("id-ID");
+
+      document.getElementById("bookingIdDisplay").textContent = data.bookingId;
+
+      renderTicketBarcode(); // QR
+
     } catch (err) {
-      console.error("Error loading film/schedule:", err);
+      console.error("Gagal memuat tiket:", err);
+      alert("Gagal memuat tiket");
     }
   }
 
-  loadFilmAndSchedule();
+  loadTicket();
 
-  function goHome() {
-    localStorage.removeItem("selectedSeats");
-    localStorage.removeItem("seatTotalPrice");
-    localStorage.removeItem("scheduleId");
-    localStorage.removeItem("fnbItems");
-    localStorage.removeItem("fnbTotalPrice");
-    window.location.href = "homepage.html";
-  }
+    function goHome() {
+      localStorage.removeItem("selectedSeats");
+      localStorage.removeItem("seatTotalPrice");
+      localStorage.removeItem("scheduleId");
+      localStorage.removeItem("fnbItems");
+      localStorage.removeItem("fnbTotalPrice");
+      window.location.href = "homepage.html";
+    }
+     function renderTicketBarcode() {
+      const barcodeTargetUrl =
+        "https://yt3.googleusercontent.com/0Wk1sRZ-V17WPh-QcpNo1GvZj8cqfgTy49JexcDODbN2q5Pgw4C-a9tiYUcOflsmO2ixdz2oGw=s160-c-k-c0x00ffffff-no-rj";
+
+      const container = document.getElementById("ticketBarcode");
+      container.innerHTML = ""; // clear jika reload
+
+      new QRCode(container, {
+        text: barcodeTargetUrl,
+        width: 160,
+        height: 160,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+      });
+    }
 </script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 </body>
 </html>
