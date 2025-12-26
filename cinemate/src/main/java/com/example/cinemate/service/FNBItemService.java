@@ -1,11 +1,17 @@
 package com.example.cinemate.service;
 
+import com.example.cinemate.dto.FNBItemRequest;
 import com.example.cinemate.dto.PurchaseItem;
 import com.example.cinemate.dto.PurchaseRequest;
+import com.example.cinemate.entities.Booking;
 import com.example.cinemate.entities.FNBItem;
+import com.example.cinemate.entities.FnbOrder;
 import com.example.cinemate.entities.Location;
+import com.example.cinemate.repository.BookingRepository;
 import com.example.cinemate.repository.FNBItemRepository;
+import com.example.cinemate.repository.FnbOrderRepository;
 import com.example.cinemate.repository.LocationRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,43 +23,47 @@ public class FNBItemService {
 
     private final FNBItemRepository fnbRepo;
     private final LocationRepository locationRepo;
+    private final BookingRepository bookingRepo;
+    private final FnbOrderRepository fnbOrderRepo;
 
-    private static final List<FNBItem> DEFAULT_ITEMS = List.of(
-            new FNBItem("Burger", 0, null),
-            new FNBItem("Hotdog", 0, null),
-            new FNBItem("Fried Chicken", 0, null),
-            new FNBItem("Rice Bowl", 0, null),
-
-            new FNBItem("Cola", 0, null),
-            new FNBItem("Mineral Water", 0, null),
-            new FNBItem("Milk Tea", 0, null),
-            new FNBItem("Orange Juice", 0, null),
-
-            new FNBItem("Popcorn", 0, null),
-            new FNBItem("Nachos", 0, null),
-            new FNBItem("French Fries", 0, null),
-            new FNBItem("Potato Wedges", 0, null)
-    );
-
-    /** Load all menu for a location; if not exist yet, initialize default */
-    public List<FNBItem> getFnbByLocation(Long locationId) {
-        List<FNBItem> items = fnbRepo.findByLocationId(locationId);
-
-        if (items.isEmpty()) {
-            Location loc = locationRepo.findById(locationId)
-                    .orElseThrow(() -> new RuntimeException("Location not found"));
-
-            List<FNBItem> created = DEFAULT_ITEMS.stream()
-                    .map(i -> new FNBItem(i.getName(), 0, loc))
-                    .toList();
-
-            return fnbRepo.saveAll(created);
-        }
-
-        return items;
+    public List<FNBItem> getByLocation(Long locationId) {
+        return fnbRepo.findByLocationId(locationId);
     }
 
-    /** Update quantity only */
+    public FNBItem create(FNBItemRequest req) {
+        Location loc = locationRepo.findById(req.getLocationId())
+                .orElseThrow(() -> new RuntimeException("Location not found"));
+
+        FNBItem item = new FNBItem();
+        item.setName(req.getName());
+        item.setDescription(req.getDescription());
+        item.setPrice(req.getPrice());
+        item.setType(req.getType());
+        item.setQuantity(req.getQuantity());
+        item.setImageUrl(req.getImageUrl());
+        item.setLocation(loc);
+
+        return fnbRepo.save(item);
+    }
+
+    public FNBItem update(Long id, FNBItemRequest req) {
+        FNBItem item = fnbRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("FNB item not found"));
+
+        if (!item.getLocation().getId().equals(req.getLocationId())) {
+            throw new RuntimeException("Item does not belong to this location");
+        }
+
+        item.setName(req.getName());
+        item.setDescription(req.getDescription());
+        item.setPrice(req.getPrice());
+        item.setType(req.getType());
+        item.setQuantity(req.getQuantity());
+        item.setImageUrl(req.getImageUrl());
+
+        return fnbRepo.save(item);
+    }
+
     public FNBItem updateQuantity(Long id, Integer quantity) {
         FNBItem item = fnbRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("FNB item not found"));
@@ -62,7 +72,18 @@ public class FNBItemService {
         return fnbRepo.save(item);
     }
 
+    public void delete(Long id) {
+        if (!fnbRepo.existsById(id)) {
+            throw new RuntimeException("FNB item not found");
+        }
+        fnbRepo.deleteById(id);
+    }
+
+    @Transactional
     public void purchase(PurchaseRequest req) {
+
+        Booking booking = bookingRepo.findById(req.getBookingId())
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
 
         for (PurchaseItem p : req.getItems()) {
 
@@ -79,6 +100,13 @@ public class FNBItemService {
 
             item.setQuantity(item.getQuantity() - p.getQuantity());
             fnbRepo.save(item);
+
+            FnbOrder order = new FnbOrder();
+            order.setBooking(booking);
+            order.setItem(item);
+            order.setQuantity(p.getQuantity());
+
+            fnbOrderRepo.save(order);
         }
     }
 }
