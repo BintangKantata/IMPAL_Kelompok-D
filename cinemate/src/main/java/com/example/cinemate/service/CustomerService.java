@@ -39,6 +39,6 @@ public class CustomerService {
                 return customer;
             }
         }
-        return null; // login gagal
+        return null;
     }
 }
